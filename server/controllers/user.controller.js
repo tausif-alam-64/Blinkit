@@ -105,7 +105,7 @@ export async function loginController(req, res) {
 
     if(!user){
       return res.statur(400).json({
-        message: "user not register",
+        message: "User not register",
         error: true,
         success: false
       })
@@ -122,7 +122,7 @@ export async function loginController(req, res) {
     const checkPassword = await bcryptjs.compare(password, user.password);
     if(!checkPassword){
       return res.status(400).json({
-        message: "Check you password",
+        message: "Check you password again.",
         error: true, 
         success: false
       })
