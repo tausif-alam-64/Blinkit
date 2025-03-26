@@ -88,7 +88,7 @@ export async function verifyEmailController(req, res) {
     });
   }
 }
-
+ // login controller
 export async function loginController(req, res) {
   try {
     const {email, password} = req.body;
@@ -155,3 +155,4 @@ export async function loginController(req, res) {
     })
   }
 }
+
