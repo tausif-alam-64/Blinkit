@@ -1,9 +1,0 @@
-# Ignore backend environment files
-.env
-
-# Ignore dependencies
-node_modules/
-
-# Ignore logs
-logs/
-*.log
