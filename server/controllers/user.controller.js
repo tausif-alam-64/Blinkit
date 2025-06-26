@@ -5,6 +5,7 @@ import verifyEmailTemplate from "../utils/verifyEmailTemplate.js";
 import { response } from "express";
 import generatedAccessToken from "../utils/generatedAcessToken.js";
 import generatedRefreshToken from "../utils/generatedRefreshToken.js";
+import uploadImageCloudinary from "../utils/uploadImagecloudinary.js";
 
 export async function registerUserController(request, response) {
   try {
@@ -76,11 +77,11 @@ export async function verifyEmailController(req, res) {
         message: "Invalid user"
       })
     }
-    return response.json({
-      message: "Verification compleat."
-    })
     const updateUser = await UserModel.updateOne({_id: code},{
       verify_email: true
+    })
+    return response.json({
+      message: "Verification compleat."
     })
   } catch (error) {
     return res.json({
@@ -88,7 +89,7 @@ export async function verifyEmailController(req, res) {
     });
   }
 }
- // login controller
+
 export async function loginController(req, res) {
   try {
     const {email, password} = req.body;
@@ -156,3 +157,95 @@ export async function loginController(req, res) {
   }
 }
 
+export async function logoutController(req, res){
+  try {
+
+    const userId = req.userId
+
+    const cookiesOption = {
+      httpOnly : true,
+      secure: true,
+      sameSite: "None"
+    }
+
+    res.clearCookie("accessToken", cookiesOption)
+    res.clearCookie("refreshToken", cookiesOption)
+
+    const removeRefreshToken = await UserModel.findByIdAndUpdate(userId, {
+      refresh_token: ""
+    })
+
+    return res.json({
+      message: "Logout successfully",
+      error: false,
+      success: true
+    })
+
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message || error,
+      error: true, 
+      success: false
+    })
+  }
+}
+
+export async function uploadAvatar(req, res) {
+  try {
+    const userId = req.userId;
+    const image = req.file;
+  
+    const upload = await uploadImageCloudinary(image)
+
+    const updateUser = await UserModel.findByIdAndUpdate(userId, {
+      avatar: upload.url
+    })
+
+    return res.json({
+      message: "Profile uploaded",
+        data: {
+          _id: userId,
+          avatar: upload.url
+        }
+    })
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message || error,
+      error: true, 
+      success: false
+    })
+  }
+}
+
+export async function updateUserDetails(req, res) {
+  try {
+    const userId = req.userId;
+    const {name, email, password, mobile} = req.body;
+    
+    let hashPassword = ""
+    if(password){
+      const salt = await bcryptjs.genSalt(10);
+      hashPassword = await bcryptjs.hash(password, salt);
+    }
+    
+    const updateUser = await UserModel.updateOne({_id: userId}, {
+      ...(name && {name: name}),
+      ...(email && {email: email}),
+      ...(password && {password: hashPassword}),
+      ...(mobile && {mobile: mobile})
+    })
+
+    return res.json({
+      message: "User updated successfully",
+      error: false,
+      success: true,
+      data: updateUser
+    })
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message || error,
+      error: true,
+      success: false
+    })
+  }
+}

@@ -9,12 +9,12 @@ import userRouter from "./routes/user.route.js";
 
 dotenv.config();
 
-const PORT = 8000 || process.env.PORT;
+const PORT =process.env.PORT || 8080;
 
 const app = express();
 app.use(
   cors({
-    creddntials: true,
+    credentials: true,
     origin: process.env.FRONTEND_URL,
   })
 );
