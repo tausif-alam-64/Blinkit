@@ -8,14 +8,12 @@ import AxiosToastError from "../utils/AxiosToastError";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
-const Login = () => {
+const ForgotPassword = () => {
   const [data, setDeta] = useState({
     email: "",
-    password: "",
   });
 
   const navigate = useNavigate();
-  const [showPassword, setShowPassword] = useState(false);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setDeta((prev) => {
@@ -33,7 +31,7 @@ const Login = () => {
 
     try {
       const response = await Axios({
-        ...SummaryApi.login,
+        ...SummaryApi.forgot_password,
         data: data,
       });
 
@@ -43,11 +41,13 @@ const Login = () => {
 
       if (response.data.success) {
         toast.success(response.data.message);
+        navigate("/varification-otp", {
+          state: data,
+        });
         setDeta({
           email: "",
-          password: "",
         });
-        navigate("/");
+
       }
     } catch (error) {
       AxiosToastError(error);
@@ -56,6 +56,7 @@ const Login = () => {
   return (
     <section className="w-full container mx-auto px-2">
       <div className="bg-white my-4 w-full max-w-lg mx-auto rounded p-8">
+        <p className="font-semibold text-lg ">Forgot Password</p>
         <form action="" onSubmit={handleSubmit} className="grid gap-3 py-4">
           <div className="grid gap-1">
             <label htmlFor="email">Email :</label>
@@ -69,43 +70,22 @@ const Login = () => {
               onChange={handleChange}
             />
           </div>
-          <div className="grid gap-1">
-            <label htmlFor="password">Password :</label>
-            <div className="bg-blue-50 p-2 rounded border flex items-center focus-within:border-primary-200">
-              <input
-                type={showPassword ? "text" : "password"}
-                id="password"
-                placeholder="Enter your password"
-                className="w-full outline-none"
-                name="password"
-                value={data.password}
-                onChange={handleChange}
-              />
-              <div
-                onClick={() => setShowPassword((prev) => !prev)}
-                className="cursor-pointer"
-              >
-                {showPassword ? <FaRegEye /> : <FaRegEyeSlash />}
-              </div>
-            </div>
-            <Link to={"/forgot-password"} className="block ml-auto hover:text-primary-200">Forgot Password ?</Link>
-          </div>
           <button
             disabled={!valideValue}
             className={`${
               valideValue ? "bg-green-800 hover:bg-green-700" : "bg-gray-500"
             } text-white py-2 rounded font-semibold my-3 tracking-wide`}
           >
-            Register
+            Send Otp
           </button>
         </form>
         <p>
-          Don't have account ? {" "}
+          Already have account ?{" "}
           <Link
-            to={"/register"}
+            to={"/login"}
             className="font-semibold text-green-700 hover:text-green-800"
           >
-             Register
+            Login
           </Link>
         </p>
       </div>
@@ -113,4 +93,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default ForgotPassword;
