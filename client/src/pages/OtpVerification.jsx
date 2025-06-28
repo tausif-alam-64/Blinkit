@@ -42,7 +42,12 @@ const OtpVerification = () => {
       if (response.data.success) {
         toast.success(response.data.message);
         setDeta(["", "", "", "", "", ""]);
-        navigate("/reset-password");
+        navigate("/reset-password",{
+          state:{
+            data: response.data,
+            email: location?.state.email
+          }
+        });
       }
     } catch (error) {
       AxiosToastError(error);
