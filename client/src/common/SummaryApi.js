@@ -19,19 +19,27 @@ const SummaryApi = {
   },
   resetPassword: {
     url: "/api/user/reset-password",
-    method: "put"
+    method: "put",
   },
   refreshToken: {
     url: "/api/user/refresh-token",
-    method: "post"
+    method: "post",
   },
   userDetails: {
     url: "/api/user/user-details",
-    method: "get"
+    method: "get",
   },
   logout: {
     url: "/api/user/logout",
-    method: "get"
+    method: "get",
+  },
+  uploadAvatar: {
+    url: "/api/user/upload-avatar",
+    method: "put",
+  },
+  updateUserDetails: {
+    url: "/api/user/update-user",
+    method: "put"
   }
 };
 
