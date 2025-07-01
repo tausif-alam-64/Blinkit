@@ -1,17 +1,21 @@
-import {createBrowserRouter} from 'react-router-dom'
-import App from "../App.jsx"
-import Home from '../pages/Home.jsx';
-import SearchPage from '../pages/SearchPage.jsx';
-import Login from '../pages/login.jsx';
-import Register from '../pages/Register.jsx';
-import ForgotPassword from '../pages/ForgotPassword.jsx';
-import OtpVerification from '../pages/OtpVerification.jsx';
-import ResetPassword from '../pages/ResetPassword.jsx';
-import UserMenuMobile from '../pages/userMenuMobile.jsx';
-import Dashbord from '../layouts/Dashbord.jsx';
-import Profile from '../pages/Profile.jsx';
-import MyOrders from '../pages/MyOrders.jsx';
-import Address from '../pages/Address.jsx';
+import { createBrowserRouter } from "react-router-dom";
+import App from "../App.jsx";
+import Home from "../pages/Home.jsx";
+import SearchPage from "../pages/SearchPage.jsx";
+import Login from "../pages/login.jsx";
+import Register from "../pages/Register.jsx";
+import ForgotPassword from "../pages/ForgotPassword.jsx";
+import OtpVerification from "../pages/OtpVerification.jsx";
+import ResetPassword from "../pages/ResetPassword.jsx";
+import UserMenuMobile from "../pages/userMenuMobile.jsx";
+import Dashbord from "../layouts/Dashbord.jsx";
+import Profile from "../pages/Profile.jsx";
+import MyOrders from "../pages/MyOrders.jsx";
+import Address from "../pages/Address.jsx";
+import CategoryPage from "../pages/CategoryPage.jsx";
+import SubCategoryPage from "../pages/SubCategoryPage.jsx";
+import UploadProduct from "../pages/UploadProduct.jsx";
+import ProductAdmin from "../pages/ProductAdmin.jsx";
 
 const router = createBrowserRouter([
   {
@@ -20,35 +24,35 @@ const router = createBrowserRouter([
     children: [
       {
         path: "",
-        element: <Home />
+        element: <Home />,
       },
       {
         path: "search",
-        element: <SearchPage />
+        element: <SearchPage />,
       },
       {
         path: "login",
-        element: <Login />
+        element: <Login />,
       },
       {
         path: "register",
-        element: <Register />
+        element: <Register />,
       },
       {
         path: "forgot-password",
-        element: <ForgotPassword />
+        element: <ForgotPassword />,
       },
       {
         path: "varification-otp",
-        element: <OtpVerification />
+        element: <OtpVerification />,
       },
       {
         path: "reset-password",
-        element: <ResetPassword />
+        element: <ResetPassword />,
       },
       {
         path: "user",
-        element: <UserMenuMobile /> 
+        element: <UserMenuMobile />,
       },
       {
         path: "dashboard",
@@ -56,20 +60,36 @@ const router = createBrowserRouter([
         children: [
           {
             path: "profile",
-            element: <Profile />
+            element: <Profile />,
           },
           {
             path: "myorders",
-            element: <MyOrders />
+            element: <MyOrders />,
           },
           {
             path: "address",
-            element: <Address />
+            element: <Address />,
           },
-        ]
-      }
-    ]
-  }
-])
+          {
+            path: "category",
+            element: <CategoryPage />,
+          },
+          {
+            path: "sub-category",
+            element: <SubCategoryPage />,
+          },
+          {
+            path: "upload-product",
+            element: <UploadProduct />,
+          },
+          {
+            path: "product",
+            element: <ProductAdmin />,
+          },
+        ],
+      },
+    ],
+  },
+]);
 
 export default router;
