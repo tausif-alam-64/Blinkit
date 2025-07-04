@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { IoClose } from "react-icons/io5";
+import uploadImage from "../utils/UploadImage";
 
-const UploadDategoryModel = ({ close }) => {
+const UploadCategoryModel = ({ close }) => {
   const [data, setData] = useState({
     name: "",
     image: "",
@@ -22,12 +23,16 @@ const UploadDategoryModel = ({ close }) => {
     e.preventDefault();
   }
 
-  const handleUploadCategory = (e) => {
+  const handleUploadCategory = async (e) => {
     const file = e.target.files[0]
 
     if(!file){
         return
     }
+
+    const Image = await uploadImage(file)
+
+    console.log(Image)
   }
 
   return (
@@ -59,10 +64,10 @@ const UploadDategoryModel = ({ close }) => {
                 <p className="text-sm text-neutral-500">No image</p>
               </div>
               <label htmlFor="uploadCategoryImage">
-                <div disabled={!data.name} className={`${!data.name ? "bg-gray-400" : "bg-primary-200" } px-4 py-2 rounded`}>
+                <div className={`${!data.name ? "bg-gray-400" : "bg-primary-200" } px-4 py-2 rounded`}>
                 Upload Image
               </div>
-              <input type="file" id="uploadCategoryImage" className="hidden" accept="image/*" onChange={handleUploadCategory} />
+              <input type="file" disabled={!data.name} id="uploadCategoryImage" className="hidden" accept="image/*" onChange={handleUploadCategory} />
               </label>
             </div>
           </div>
@@ -72,4 +77,4 @@ const UploadDategoryModel = ({ close }) => {
   );
 };
 
-export default UploadDategoryModel;
+export default UploadCategoryModel;

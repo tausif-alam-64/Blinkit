@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import UploadDategoryModel from '../components/UploadDategoryModel'
+import UploadCategoryModel from '../components/UploadCategoryModel'
 
 const CategoryPage = () => {
   const [openUploadCategory, setOpenUploadCategory] = useState(false)
@@ -12,7 +12,7 @@ const CategoryPage = () => {
       
       {
         openUploadCategory && (
-          <UploadDategoryModel close={() => setOpenUploadCategory(false)} /> 
+          <UploadCategoryModel close={() => setOpenUploadCategory(false)} /> 
         )
       }
     </section>
