@@ -20,3 +20,5 @@ import mongoose from "mongoose";
  })
 
  const SubCategoryModel = mongoose.model('subCategory', subCategorySchema);
+
+ export default SubCategoryModel;
