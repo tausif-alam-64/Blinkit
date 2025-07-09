@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
  const subCategorySchema = new mongoose.Schema({
     name : {
-        type: Stirng,
+        type: String,
         default: ""
     },
     image : {

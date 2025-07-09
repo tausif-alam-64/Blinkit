@@ -8,6 +8,7 @@ import { logout } from "../store/userSlice";
 import { toast } from "react-hot-toast";
 import AxiosToastError from "../utils/AxiosToastError";
 import { HiOutlineExternalLink } from "react-icons/hi";
+import isAdmin from "../store/isAdmin";
 
 const UserManu = ({ close }) => {
   const user = useSelector((state) => state.user);
@@ -38,13 +39,15 @@ const UserManu = ({ close }) => {
     if (close) return close();
   };
 
+  console.log("user Role", user.role);
+
   return (
     <div>
       <div className="font-semibold">My Account</div>
       <div className="text-sm flex items-center gap-2">
         <span className="max-w-52 text-ellipsis line-clamp-1">
           {" "}
-          {user.name || user.mobile}{" "}
+          {user.name || user.mobile}{" "} <span className="text-medium text-red-400"> {user.role === "ADMIN" ? "(Admin)" : ""}</span>
         </span>
         <Link
           to={"/dashboard/profile"}
@@ -56,13 +59,16 @@ const UserManu = ({ close }) => {
       </div>
       <Divider />
       <div className="text-sm grid gap-1 ">
-        <Link
-          onClick={handleClose}
-          to={"/dashboard/category"}
-          className="px-2 hover:bg-orange-200 py-1"
-        >
-          Category
-        </Link>
+        {isAdmin(user.role) && (
+          <Link
+            onClick={handleClose}
+            to={"/dashboard/category"}
+            className="px-2 hover:bg-orange-200 py-1"
+          >
+            Category
+          </Link>
+        )}
+        {isAdmin(user.role) && (
         <Link
           onClick={handleClose}
           to={"/dashboard/sub-category"}
@@ -70,6 +76,8 @@ const UserManu = ({ close }) => {
         >
           Sub Category
         </Link>
+        )}
+        {isAdmin(user.role) && (
         <Link
           onClick={handleClose}
           to={"/dashboard/upload-product"}
@@ -77,6 +85,8 @@ const UserManu = ({ close }) => {
         >
           Upload Product
         </Link>
+        )}
+        {isAdmin(user.role) && (
         <Link
           onClick={handleClose}
           to={"/dashboard/product"}
@@ -84,6 +94,7 @@ const UserManu = ({ close }) => {
         >
           Product
         </Link>
+        )}
         <Link
           onClick={handleClose}
           to={"/dashboard/myorders"}

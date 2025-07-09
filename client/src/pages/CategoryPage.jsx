@@ -6,17 +6,22 @@ import Axios from "../utils/Axios";
 import SummaryApi from "../common/SummaryApi";
 import EditCategory from "../components/EditCategory";
 import ConfirmBox from "../components/ConfirmBox";
+import AxiosToastError from "../utils/AxiosToastError";
+import toast from "react-hot-toast";
 
 const CategoryPage = () => {
   const [openUploadCategory, setOpenUploadCategory] = useState(false);
   const [loading, setLoading] = useState(false);
   const [categoryData, setCategoryData] = useState([]);
   const [openEdit, setOpenEdit] = useState(false);
-  const [editData , setEditData] = useState({
+  const [editData, setEditData] = useState({
     name: "",
-    image: ""
-  })
-  const [openDeleteConfirmBox, setOpenDeleteConfirmBox] = useState(false)
+    image: "",
+  });
+  const [openDeleteConfirmBox, setOpenDeleteConfirmBox] = useState(false);
+  const [deleteCategory, setDeleteCategory] = useState({
+    _id: ""
+  });
 
   const fetchCategory = async () => {
     try {
@@ -30,10 +35,28 @@ const CategoryPage = () => {
       if (responseData.success) {
         setCategoryData(responseData.data);
       }
-      console.log(responseData);
     } catch (error) {
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDeleteCategory = async () => {
+    try {
+      const response = await Axios({
+        ...SummaryApi.deleteCategory,
+        data: deleteCategory,
+      });
+
+      const { data: responseData } = response;
+
+      if (responseData.success) {
+        toast.success(responseData.message);
+        fetchCategory();
+        setOpenDeleteConfirmBox(false);
+      }
+    } catch (error) {
+      AxiosToastError(error)
     }
   };
 
@@ -57,7 +80,7 @@ const CategoryPage = () => {
       <div className="p-4 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
         {categoryData.map((category, index) => {
           return (
-            <div className="w-32 h-56 rounded shadow-md">
+            <div key={category._id} className="w-32 h-56 rounded shadow-md">
               <img
                 src={category.image}
                 alt={category.name}
@@ -67,13 +90,19 @@ const CategoryPage = () => {
                 <button
                   onClick={() => {
                     setOpenEdit(true);
-                    setEditData(category)
+                    setEditData(category);
                   }}
                   className="flex-1 bg-green-100 hover:bg-green-200 text-green-600 font-medium py-1 rounded"
                 >
                   Edit
                 </button>
-                <button onClick={() => setOpenDeleteConfirmBox(true)} className="flex-1 bg-red-100 hover:bg-red-200 text-red-600 font-medium py-1 rounded">
+                <button
+                  onClick={() => {
+                    setOpenDeleteConfirmBox(true);
+                    setDeleteCategory(category);
+                  }}
+                  className="flex-1 bg-red-100 hover:bg-red-200 text-red-600 font-medium py-1 rounded"
+                >
                   Delete
                 </button>
               </div>
@@ -95,11 +124,13 @@ const CategoryPage = () => {
         />
       )}
 
-      {
-        openDeleteConfirmBox && (
-          <ConfirmBox close={() => setOpenDeleteConfirmBox(false)} />
-        )
-      }
+      {openDeleteConfirmBox && (
+        <ConfirmBox
+          close={() => setOpenDeleteConfirmBox(false)}
+          cancel={() => setOpenDeleteConfirmBox(false)}
+          confirm={handleDeleteCategory}
+        />
+      )}
     </section>
   );
 };
