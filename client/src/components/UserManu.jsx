@@ -8,7 +8,7 @@ import { logout } from "../store/userSlice";
 import { toast } from "react-hot-toast";
 import AxiosToastError from "../utils/AxiosToastError";
 import { HiOutlineExternalLink } from "react-icons/hi";
-import isAdmin from "../store/isAdmin";
+import isAdmin from "../utils/isAdmin";
 
 const UserManu = ({ close }) => {
   const user = useSelector((state) => state.user);
@@ -39,7 +39,6 @@ const UserManu = ({ close }) => {
     if (close) return close();
   };
 
-  console.log("user Role", user.role);
 
   return (
     <div>

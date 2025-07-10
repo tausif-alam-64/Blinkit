@@ -6,6 +6,9 @@ import {Toaster} from "react-hot-toast";
 import fetchUserDetails from "./utils/fetchUserDetails";
 import { useDispatch } from "react-redux";
 import { setUserDetails } from "./store/userSlice";
+import {setAllCategory} from "./store/productSlice"
+import Axios from "./utils/Axios";
+import SummaryApi from "./common/SummaryApi";
 
 const App = () => {
   
@@ -16,8 +19,26 @@ const App = () => {
     dispatch(setUserDetails(userData.data))
   }
 
+   const fetchCategory = async () => {
+      try {
+        const response = await Axios({
+          ...SummaryApi.getCategory,
+        });
+  
+        const { data: responseData } = response;
+  
+        if (responseData.success) {
+          dispatch(setAllCategory(responseData.data))
+        }
+      } catch (error) {
+        return console.error("error while fetching category", error)
+      }
+    };
+  
+
   useEffect(() => {
     fetchUser();
+    fetchCategory();
   }, [])
   return (
     <>

@@ -8,6 +8,7 @@ import EditCategory from "../components/EditCategory";
 import ConfirmBox from "../components/ConfirmBox";
 import AxiosToastError from "../utils/AxiosToastError";
 import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
 
 const CategoryPage = () => {
   const [openUploadCategory, setOpenUploadCategory] = useState(false);
@@ -20,26 +21,36 @@ const CategoryPage = () => {
   });
   const [openDeleteConfirmBox, setOpenDeleteConfirmBox] = useState(false);
   const [deleteCategory, setDeleteCategory] = useState({
-    _id: ""
+    _id: "",
   });
 
-  const fetchCategory = async () => {
-    try {
-      setLoading(true);
-      const response = await Axios({
-        ...SummaryApi.getCategory,
-      });
+  const allCategory = useSelector((state) => state.product.allCategory)
+   
+  useEffect(() => {
+    setCategoryData(allCategory)
+  }, [allCategory])
 
-      const { data: responseData } = response;
+  // const fetchCategory = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const response = await Axios({
+  //       ...SummaryApi.getCategory,
+  //     });
 
-      if (responseData.success) {
-        setCategoryData(responseData.data);
-      }
-    } catch (error) {
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     const { data: responseData } = response;
+
+  //     if (responseData.success) {
+  //       setCategoryData(responseData.data);
+  //     }
+  //   } catch (error) {
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchCategory();
+  // }, []);
 
   const handleDeleteCategory = async () => {
     try {
@@ -52,17 +63,13 @@ const CategoryPage = () => {
 
       if (responseData.success) {
         toast.success(responseData.message);
-        fetchCategory();
+       
         setOpenDeleteConfirmBox(false);
       }
     } catch (error) {
-      AxiosToastError(error)
+      AxiosToastError(error);
     }
   };
-
-  useEffect(() => {
-    fetchCategory();
-  }, []);
 
   return (
     <section>
@@ -70,7 +77,7 @@ const CategoryPage = () => {
         <h2 className="font-semibold">Category</h2>
         <button
           onClick={() => setOpenUploadCategory(true)}
-          className="text-sm border border-primary-200 hover:bg-primary-200 px-3 rounded"
+          className="text-sm border border-primary-200 hover:bg-primary-200 px-3 py-1 rounded"
         >
           Add Category
         </button>
@@ -112,7 +119,6 @@ const CategoryPage = () => {
       </div>
       {openUploadCategory && (
         <UploadCategoryModel
-          fetchData={fetchCategory}
           close={() => setOpenUploadCategory(false)}
         />
       )}
@@ -120,7 +126,6 @@ const CategoryPage = () => {
         <EditCategory
           data={editData}
           close={() => setOpenEdit(false)}
-          fetchData={fetchCategory}
         />
       )}
 
