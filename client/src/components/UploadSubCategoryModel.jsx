@@ -66,9 +66,8 @@ const UploadSubCategoryModel = ({ close }) => {
         })
 
         const { data: responseData} = response
-
         if(responseData.success){
-            toast.success(responseData.success)
+            toast.success(responseData.message)
             if(close){
                 close()
             }

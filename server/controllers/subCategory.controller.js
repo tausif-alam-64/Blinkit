@@ -13,7 +13,7 @@ export const addSubCategoryController = async (req, res) => {
         const payload = {
             name,
             image, 
-            cagetory
+            category
         }
 
         const createSubCategory = new SubCategoryModel(payload)
