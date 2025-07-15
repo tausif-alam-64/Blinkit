@@ -17,19 +17,19 @@ export const addSubCategoryController = async (req, res) => {
         }
 
         const createSubCategory = new SubCategoryModel(payload)
-        const save = await createSubCategory.save()
+        const save = await createSubCategory.save();
 
         return res.json({
             message: "Sub Category Created",
             error: false, 
             success: true,
-            data: save
+            data: save,
         })
     } catch (error) {
         return res.status(500).json({
             message: error.message || error,
             error: true,
-            success: false
+            success: false,
         })
     }
 }
