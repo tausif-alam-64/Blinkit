@@ -64,6 +64,10 @@ const SummaryApi = {
   createSubCategory: {
     url: "/api/subcategory/create",
     method: 'post'
+  },
+  getSubCategory: {
+    url : '/api/subCategory/get',
+    method: 'post'
   }
 };
 

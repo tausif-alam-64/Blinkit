@@ -40,7 +40,7 @@ const UploadSubCategoryModel = ({ close }) => {
     setSubCategoryData((prev) => {
       return {
         ...prev,
-        image: ImageResponse.data.url,
+        image: ImageResponse.data.url
       };
     });
   };
@@ -52,7 +52,7 @@ const UploadSubCategoryModel = ({ close }) => {
     subCategoryData.category.splice(index, 1);
     setSubCategoryData((prev) => {
       return {
-        ...prev,
+        ...prev
       };
     });
   };
