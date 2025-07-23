@@ -9,7 +9,7 @@ import mongoose from "mongoose";
         type: String,
         default: ""
     },
-    categoryId : [
+    category : [
         {
             type: mongoose.Schema.ObjectId,
             ref: 'category'
