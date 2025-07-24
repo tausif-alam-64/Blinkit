@@ -7,15 +7,20 @@ import { useEffect } from "react";
 import DisplayTable from "../components/DisplayTable";
 import { createColumnHelper } from "@tanstack/react-table";
 import ViewImage from "../components/ViewImage";
-import { LuPencil } from "react-icons/lu";
+import { HiPencil } from "react-icons/hi";
 import { MdDelete } from "react-icons/md";
+import EditSubCategory from "../components/EditSubCategory";
 
 const SubCategoryPage = () => {
   const [openAddSubCategory, setOpenAddSubCategory] = useState(false);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const columnHelper = createColumnHelper();
-  const [imageURL, setImageURL] = useState("")
+  const [imageURL, setImageURL] = useState("");
+  const [openEdit, setOpenEdit] = useState(false);
+  const [editData, setEditData] = useState({
+    _id: "",
+  });
 
   const fetchSubCategory = async () => {
     try {
@@ -54,7 +59,7 @@ const SubCategoryPage = () => {
               alt={row.original.name}
               className="w-8 h-8 cursor-pointer"
               onClick={() => {
-                setImageURL(row.original.image)
+                setImageURL(row.original.image);
               }}
             />
           </div>
@@ -63,32 +68,44 @@ const SubCategoryPage = () => {
     }),
     columnHelper.accessor("category", {
       header: "Category",
-      cell: ({row}) => {
-        return <>
-         {
-          row.original.category.map((c, index) => {
-            return(
-              <p key={c._id+"table"} className="inline-block shadow-md px-2 rounded-md">{c.name} </p>
-            )
-          })
-         }
-        </>
-      }
+      cell: ({ row }) => {
+        return (
+          <>
+            {row.original.category.map((c, index) => {
+              return (
+                <p
+                  key={c._id + "table"}
+                  className="inline-block shadow-md px-2 rounded-md"
+                >
+                  {c.name}{" "}
+                </p>
+              );
+            })}
+          </>
+        );
+      },
     }),
     columnHelper.accessor("_id", {
       header: "Action",
-      cell : ({row}) => {
-        return(
-        <div className="flex items-center justify-center gap-3">
-          <button className="p-2 bg-green-100 rounded-full hover:text-green-600">
-            <LuPencil size={20} />
-          </button>
-          <button className="p-2 bg-red-100 rounded-full hover:text-red-600">
-            <MdDelete size={20} />
-          </button>
-        </div>)
-      }
-    })
+      cell: ({ row }) => {
+        return (
+          <div className="flex items-center justify-center gap-3">
+            <button
+              onClick={() => {
+                setOpenEdit(true);
+                setEditData(row.original);
+              }}
+              className="p-2 bg-green-100 rounded-full text-green-400 hover:text-green-600"
+            >
+              <HiPencil size={20} />
+            </button>
+            <button className="p-2 bg-red-100 rounded-full text-red-400 hover:text-red-600">
+              <MdDelete size={20} />
+            </button>
+          </div>
+        );
+      },
+    }),
   ];
 
   console.log("SubCategoryData", data);
@@ -110,10 +127,11 @@ const SubCategoryPage = () => {
         <UploadSubCategoryModel close={() => setOpenAddSubCategory(false)} />
       )}
 
-      {
-        imageURL &&
-        <ViewImage url={imageURL} close={() => setImageURL("") } />
-      }
+      {imageURL && <ViewImage url={imageURL} close={() => setImageURL("")} />}
+
+      {openEdit && (
+        <EditSubCategory fetchData={fetchSubCategory} data={editData} close={() => setOpenEdit(false)} />
+      )}
     </section>
   );
 };

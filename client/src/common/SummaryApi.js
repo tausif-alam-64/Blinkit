@@ -69,6 +69,11 @@ const SummaryApi = {
     url : '/api/subCategory/get',
     method: 'post'
   }
+  ,
+  updateSubCategory: {
+    url : '/api/subCategory/update',
+    method: 'put'
+  }
 };
 
 export default SummaryApi;
