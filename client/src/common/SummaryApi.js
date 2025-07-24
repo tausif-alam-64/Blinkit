@@ -39,41 +39,44 @@ const SummaryApi = {
   },
   updateUserDetails: {
     url: "/api/user/update-user",
-    method: "put"
+    method: "put",
   },
-  addCategory:{
-    url:"/api/category/add-category",
-    method: "post"
+  addCategory: {
+    url: "/api/category/add-category",
+    method: "post",
   },
   uploadImage: {
     url: "/api/file/upload",
-    method: "post"
+    method: "post",
   },
   getCategory: {
-    url: '/api/category/get',
-    method: 'get'
+    url: "/api/category/get",
+    method: "get",
   },
   updateCategory: {
     url: "/api/category/update",
-    method: 'put'
+    method: "put",
   },
   deleteCategory: {
     url: "/api/category/delete",
-    method: 'delete'
+    method: "delete",
   },
   createSubCategory: {
     url: "/api/subcategory/create",
-    method: 'post'
+    method: "post",
   },
   getSubCategory: {
-    url : '/api/subCategory/get',
-    method: 'post'
-  }
-  ,
+    url: "/api/subCategory/get",
+    method: "post",
+  },
   updateSubCategory: {
-    url : '/api/subCategory/update',
-    method: 'put'
-  }
+    url: "/api/subCategory/update",
+    method: "put",
+  },
+  deleteSubCategory: {
+    url: "/api/subCategory/delete",
+    method: "delete",
+  },
 };
 
 export default SummaryApi;
