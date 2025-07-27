@@ -154,7 +154,7 @@ const SubCategoryPage = () => {
         <DisplayTable data={data} column={column} />
       </div>
       {openAddSubCategory && (
-        <UploadSubCategoryModel close={() => setOpenAddSubCategory(false)} />
+        <UploadSubCategoryModel close={() => setOpenAddSubCategory(false)} fetchData={() => fetchSubCategory()} />
       )}
 
       {imageURL && <ViewImage url={imageURL} close={() => setImageURL("")} />}
