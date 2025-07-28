@@ -13,7 +13,7 @@ const UploadProduct = () => {
     image: [],
     category: [],
     subCategory: [],
-    unit: [],
+    unit: "",
     stock: "",
     price: "",
     discount: "",
@@ -253,6 +253,7 @@ const UploadProduct = () => {
               </div>
             </div>
           </div>
+
         </form>
       </div>
       {viewImageURL && (
