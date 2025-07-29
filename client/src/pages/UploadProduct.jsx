@@ -6,6 +6,7 @@ import Loading from "../components/Loading";
 import ViewImage from "../components/ViewImage";
 import { IoClose } from "react-icons/io5";
 import { useSelector } from "react-redux";
+import AddFieldComponent from "../components/AddFieldComponent";
 
 const UploadProduct = () => {
   const [data, setData] = useState({
@@ -23,10 +24,15 @@ const UploadProduct = () => {
   const [imageLoading, setImageLoading] = useState(false);
   const [viewImageURL, setViewImageURL] = useState("");
   const [selectCategory, setSelectCategory] = useState("");
-  const [selectSubCategory, setSelectSubCategory] = useState("")
+  const [selectSubCategory, setSelectSubCategory] = useState("");
 
+  const [openAddField, setOpenAddField] = useState(false);
+  const [moreField, setMoreField] = useState([]);
+  const [fieldName, setFieldName] = useState("")
+
+  
   const allCategory = useSelector((state) => state.product.allCategory);
-  const allSubCategory = useSelector((state) => state.product.allSubCategory)
+  const allSubCategory = useSelector((state) => state.product.allSubCategory);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -68,21 +74,21 @@ const UploadProduct = () => {
   };
 
   const handleRemoveCategory = async (index) => {
-    data.category.splice(index, 1)
+    data.category.splice(index, 1);
     setData((prev) => {
       return {
-        ...prev
-      }
-    })
-  }
+        ...prev,
+      };
+    });
+  };
   const handleRemoveSubCategory = async (index) => {
-    data.subCategory.splice(index, 1)
+    data.subCategory.splice(index, 1);
     setData((prev) => {
       return {
-        ...prev
-      }
-    })
-  }
+        ...prev,
+      };
+    });
+  };
 
   return (
     <section>
@@ -201,15 +207,21 @@ const UploadProduct = () => {
               </select>
               <div className="flex flex-wrap gap-3">
                 {data.category.map((c, index) => {
-                return (
-                  <div key={c._id + index} className="bg-blue-50 shadow-md p-1 m-1 flex items-center gap-2 rounded-md">
-                    <p>{c.name}</p>
-                    <div className="hover:bg-gray-200 rounded cursor-pointer" onClick={() => handleRemoveCategory(index)}>
-                      <IoClose size={20}/>
+                  return (
+                    <div
+                      key={c._id + index}
+                      className="bg-blue-50 shadow-md p-1 m-1 flex items-center gap-2 rounded-md"
+                    >
+                      <p>{c.name}</p>
+                      <div
+                        className="hover:bg-gray-200 rounded cursor-pointer"
+                        onClick={() => handleRemoveCategory(index)}
+                      >
+                        <IoClose size={20} />
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -223,7 +235,9 @@ const UploadProduct = () => {
                 value={selectSubCategory}
                 onChange={(e) => {
                   const value = e.target.value;
-                  const subCategory = allSubCategory.find((el) => el._id === value);
+                  const subCategory = allSubCategory.find(
+                    (el) => el._id === value
+                  );
 
                   setData((prev) => {
                     return {
@@ -234,31 +248,100 @@ const UploadProduct = () => {
                   setSelectSubCategory("");
                 }}
               >
-                <option value="" className="text-neutral-600">Select Sub Category</option>
+                <option value="" className="text-neutral-600">
+                  Select Sub Category
+                </option>
                 {allSubCategory.map((c, index) => {
                   return <option value={c?._id}>{c.name}</option>;
                 })}
               </select>
               <div className="flex flex-wrap gap-3">
                 {data.subCategory.map((c, index) => {
-                return (
-                  <div key={c._id + index} className="bg-blue-50 shadow-md p-1 m-1 flex items-center gap-2 rounded-md">
-                    <p>{c.name}</p>
-                    <div className="hover:bg-gray-200 rounded cursor-pointer" onClick={() => handleRemoveSubCategory(index)}>
-                      <IoClose size={20}/>
+                  return (
+                    <div
+                      key={c._id + index}
+                      className="bg-blue-50 shadow-md p-1 m-1 flex items-center gap-2 rounded-md"
+                    >
+                      <p>{c.name}</p>
+                      <div
+                        className="hover:bg-gray-200 rounded cursor-pointer"
+                        onClick={() => handleRemoveSubCategory(index)}
+                      >
+                        <IoClose size={20} />
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
               </div>
             </div>
           </div>
+          <div className="grid gap-1">
+            <label htmlFor="unit">Unit</label>
+            <input
+              id="unit"
+              type="text"
+              placeholder="Enter product unit"
+              value={data.unit}
+              name="unit"
+              onChange={handleChange}
+              required
+              className="bg-blue-50 p-2 outline-none border focus-within:border-primary-200 rounded"
+            />
+          </div>
+          <div className="grid gap-1">
+            <label htmlFor="stock">Number of Stock</label>
+            <input
+              id="stock"
+              type="number"
+              placeholder="Enter product stock"
+              value={data.stock}
+              name="stock"
+              onChange={handleChange}
+              required
+              className="bg-blue-50 p-2 outline-none border focus-within:border-primary-200 rounded"
+            />
+          </div>
+          <div className="grid gap-1">
+            <label htmlFor="price">Price</label>
+            <input
+              id="price"
+              type="number"
+              placeholder="Enter product price"
+              value={data.price}
+              name="price"
+              onChange={handleChange}
+              required
+              className="bg-blue-50 p-2 outline-none border focus-within:border-primary-200 rounded"
+            />
+          </div>
+          <div className="grid gap-1">
+            <label htmlFor="discount">Discount</label>
+            <input
+              id="discount"
+              type="discount"
+              placeholder="Enter product discount"
+              value={data.discount}
+              name="discount"
+              onChange={handleChange}
+              required
+              className="bg-blue-50 p-2 outline-none border focus-within:border-primary-200 rounded"
+            />
+          </div>
 
+          {/* add more fields */}
+          <div onClick={() => setOpenAddField(true)} className="inline-block bg-primary-200 hover:bg-white py-1 px-3 w-32 text-center font-semibold border border-primary-200 hover:text-neutral-900 cursor-pointer rounded">
+            Add Fields
+          </div>
         </form>
       </div>
       {viewImageURL && (
         <ViewImage url={viewImageURL} close={() => setViewImageURL("")} />
       )}
+      {
+        openAddField && (
+          <AddFieldComponent close={() => setOpenAddField(false)} />
+        )
+      }
     </section>
   );
 };
