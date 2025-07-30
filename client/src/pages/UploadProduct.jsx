@@ -27,10 +27,8 @@ const UploadProduct = () => {
   const [selectSubCategory, setSelectSubCategory] = useState("");
 
   const [openAddField, setOpenAddField] = useState(false);
-  const [moreField, setMoreField] = useState([]);
-  const [fieldName, setFieldName] = useState("")
+  const [fieldName, setFieldName] = useState("");
 
-  
   const allCategory = useSelector((state) => state.product.allCategory);
   const allSubCategory = useSelector((state) => state.product.allSubCategory);
 
@@ -88,6 +86,20 @@ const UploadProduct = () => {
         ...prev,
       };
     });
+  };
+
+  const handleAddField = async () => {
+    setData((prev) => {
+      return {
+        ...prev,
+        more_details: {
+          ...prev.more_details,
+          [fieldName]: "",
+        },
+      };
+    });
+    setFieldName("");
+    setOpenAddField(false);
   };
 
   return (
@@ -318,7 +330,7 @@ const UploadProduct = () => {
             <label htmlFor="discount">Discount</label>
             <input
               id="discount"
-              type="discount"
+              type="number"
               placeholder="Enter product discount"
               value={data.discount}
               name="discount"
@@ -329,7 +341,39 @@ const UploadProduct = () => {
           </div>
 
           {/* add more fields */}
-          <div onClick={() => setOpenAddField(true)} className="inline-block bg-primary-200 hover:bg-white py-1 px-3 w-32 text-center font-semibold border border-primary-200 hover:text-neutral-900 cursor-pointer rounded">
+          <div>
+            {Object?.keys(data.more_details).map((k, index) => {
+              return (
+                <div className="grid gap-1">
+                  <label htmlFor={k}>{k}</label>
+                  <input
+                    id={k}
+                    type="text"
+                    placeholder=""
+                    value={data?.more_details[k]}
+                    onChange={() => {
+                      const value = e.target.value
+                      setData((prev) => {
+                        return{
+                          ...prev,
+                          more_details: {
+                            ...prev.more_details,
+                            [k] : value
+                          }
+                        }
+                      })
+                    }}
+                    required
+                    className="bg-blue-50 p-2 outline-none border focus-within:border-primary-200 rounded"
+                  />
+                </div>
+              );
+            })}
+          </div>
+          <div
+            onClick={() => setOpenAddField(true)}
+            className="inline-block bg-primary-200 hover:bg-white py-1 px-3 w-32 text-center font-semibold border border-primary-200 hover:text-neutral-900 cursor-pointer rounded"
+          >
             Add Fields
           </div>
         </form>
@@ -337,11 +381,14 @@ const UploadProduct = () => {
       {viewImageURL && (
         <ViewImage url={viewImageURL} close={() => setViewImageURL("")} />
       )}
-      {
-        openAddField && (
-          <AddFieldComponent close={() => setOpenAddField(false)} />
-        )
-      }
+      {openAddField && (
+        <AddFieldComponent
+          value={fieldName}
+          submit={handleAddField}
+          onChange={(e) => setFieldName(e.target.value)}
+          close={() => setOpenAddField(false)}
+        />
+      )}
     </section>
   );
 };
