@@ -102,15 +102,21 @@ const UploadProduct = () => {
     setOpenAddField(false);
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    console.log('data', data)
+  }
   return (
     <section>
       <div className="p-2 bg-white shadow-md flex items-center justify-between">
         <h2 className="font-semibold">Upload Product</h2>
       </div>
       <div className="grid p-3">
-        <form className="grid gap-2">
+        <form className="grid gap-3" onSubmit={handleSubmit}>
           <div className="grid gap-1">
-            <label htmlFor="name">Name</label>
+            <label htmlFor="name" className="font-medium">
+              Name
+            </label>
             <input
               id="name"
               type="text"
@@ -123,12 +129,14 @@ const UploadProduct = () => {
             />
           </div>
           <div className="grid gap-1">
-            <label htmlFor="description">Description</label>
+            <label htmlFor="description" className="font-medium">
+              Description
+            </label>
             <textarea
               id="description"
               type="text"
               placeholder="Enter product description"
-              value={data.name}
+              value={data.description}
               name="description"
               onChange={handleChange}
               required
@@ -137,7 +145,7 @@ const UploadProduct = () => {
             />
           </div>
           <div>
-            <p>Image</p>
+            <p className="font-medium">Image</p>
             <div>
               <label
                 htmlFor="productImage"
@@ -192,7 +200,9 @@ const UploadProduct = () => {
             </div>
           </div>
           <div className="grid gap-1">
-            <label htmlFor="">Category</label>
+            <label htmlFor="category" className="font-medium">
+              Category
+            </label>
             <div>
               <select
                 className="bg-blue-50 border w-full p-2 rounded"
@@ -221,7 +231,7 @@ const UploadProduct = () => {
                 {data.category.map((c, index) => {
                   return (
                     <div
-                      key={c._id + index}
+                      key={c._id + index + "category"}
                       className="bg-blue-50 shadow-md p-1 m-1 flex items-center gap-2 rounded-md"
                     >
                       <p>{c.name}</p>
@@ -238,12 +248,13 @@ const UploadProduct = () => {
             </div>
           </div>
           <div className="grid gap-1">
-            <label htmlFor="">Sub Category</label>
+            <label htmlFor="sub-category" className="font-medium">
+              Sub Category
+            </label>
             <div>
               <select
                 className="bg-blue-50 border w-full p-2 rounded"
-                name=""
-                id=""
+                
                 value={selectSubCategory}
                 onChange={(e) => {
                   const value = e.target.value;
@@ -271,7 +282,7 @@ const UploadProduct = () => {
                 {data.subCategory.map((c, index) => {
                   return (
                     <div
-                      key={c._id + index}
+                      key={c._id + index + "subCategorySection"}
                       className="bg-blue-50 shadow-md p-1 m-1 flex items-center gap-2 rounded-md"
                     >
                       <p>{c.name}</p>
@@ -288,7 +299,9 @@ const UploadProduct = () => {
             </div>
           </div>
           <div className="grid gap-1">
-            <label htmlFor="unit">Unit</label>
+            <label htmlFor="unit" className="font-medium">
+              Unit
+            </label>
             <input
               id="unit"
               type="text"
@@ -301,7 +314,9 @@ const UploadProduct = () => {
             />
           </div>
           <div className="grid gap-1">
-            <label htmlFor="stock">Number of Stock</label>
+            <label htmlFor="stock" className="font-medium">
+              Number of Stock
+            </label>
             <input
               id="stock"
               type="number"
@@ -314,7 +329,9 @@ const UploadProduct = () => {
             />
           </div>
           <div className="grid gap-1">
-            <label htmlFor="price">Price</label>
+            <label htmlFor="price" className="font-medium">
+              Price
+            </label>
             <input
               id="price"
               type="number"
@@ -327,7 +344,9 @@ const UploadProduct = () => {
             />
           </div>
           <div className="grid gap-1">
-            <label htmlFor="discount">Discount</label>
+            <label htmlFor="discount" className="font-medium">
+              Discount
+            </label>
             <input
               id="discount"
               type="number"
@@ -335,47 +354,50 @@ const UploadProduct = () => {
               value={data.discount}
               name="discount"
               onChange={handleChange}
-              required
               className="bg-blue-50 p-2 outline-none border focus-within:border-primary-200 rounded"
             />
           </div>
 
           {/* add more fields */}
-          <div>
-            {Object?.keys(data.more_details).map((k, index) => {
-              return (
-                <div className="grid gap-1">
-                  <label htmlFor={k}>{k}</label>
-                  <input
-                    id={k}
-                    type="text"
-                    placeholder=""
-                    value={data?.more_details[k]}
-                    onChange={() => {
-                      const value = e.target.value
-                      setData((prev) => {
-                        return{
-                          ...prev,
-                          more_details: {
-                            ...prev.more_details,
-                            [k] : value
-                          }
-                        }
-                      })
-                    }}
-                    required
-                    className="bg-blue-50 p-2 outline-none border focus-within:border-primary-200 rounded"
-                  />
-                </div>
-              );
-            })}
-          </div>
+
+          {Object?.keys(data.more_details).map((k, index) => {
+            return (
+              <div className="grid gap-1">
+                <label htmlFor={k} className="font-medium">
+                  {k}
+                </label>
+                <input
+                  id={k}
+                  type="text"
+                  placeholder=""
+                  value={data?.more_details[k]}
+                  onChange={(e) => {
+                    const value = e.target.value
+                    setData((prev) => {
+                      return {
+                        ...prev,
+                        more_details: {
+                          ...prev.more_details,
+                          [k]: value,
+                        },
+                      };
+                    });
+                  }}
+                  className="bg-blue-50 p-2 outline-none border focus-within:border-primary-200 rounded"
+                />
+              </div>
+            );
+          })}
+
           <div
             onClick={() => setOpenAddField(true)}
-            className="inline-block bg-primary-200 hover:bg-white py-1 px-3 w-32 text-center font-semibold border border-primary-200 hover:text-neutral-900 cursor-pointer rounded"
+            className="inline-block hover:bg-primary-200 bg-white py-1 px-3 w-32 text-center font-semibold border border-primary-200 hover:text-neutral-900 cursor-pointer rounded"
           >
             Add Fields
           </div>
+          <button className="bg-primary-100 hover:bg-primary-200 py-2 rounded font-semibold">
+            Submit
+          </button>
         </form>
       </div>
       {viewImageURL && (
