@@ -49,7 +49,7 @@ const ResetPassword = () => {
     e.preventDefault();
 
     if (data.newPassword !== data.confirmPassword) {
-      toast.error("New password and confirm password must be same");
+      toast.error("New Password and Confirm password must be same");
     }
 
     try {

@@ -300,7 +300,7 @@ const UploadProduct = () => {
           </div>
           <div className="grid gap-1">
             <label htmlFor="unit" className="font-medium">
-              Unit
+              Units
             </label>
             <input
               id="unit"
@@ -335,7 +335,7 @@ const UploadProduct = () => {
             <input
               id="price"
               type="number"
-              placeholder="Enter product price"
+              placeholder="Enter product price  "
               value={data.price}
               name="price"
               onChange={handleChange}
