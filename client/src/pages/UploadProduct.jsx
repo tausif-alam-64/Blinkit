@@ -7,6 +7,10 @@ import ViewImage from "../components/ViewImage";
 import { IoClose } from "react-icons/io5";
 import { useSelector } from "react-redux";
 import AddFieldComponent from "../components/AddFieldComponent";
+import Axios from "../utils/Axios";
+import SummaryApi from "../common/SummaryApi";
+import AxiosToastError from "../utils/AxiosToastError";
+import successAlert from "../utils/SuccessAlert";
 
 const UploadProduct = () => {
   const [data, setData] = useState({
@@ -102,10 +106,35 @@ const UploadProduct = () => {
     setOpenAddField(false);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    console.log('data', data)
-  }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await Axios({
+        ...SummaryApi.createProduct,
+        data: data,
+      });
+
+      const { data: responseData } = response;
+
+      if(responseData.success){
+        successAlert(responseData.message)
+        setData({
+          name : "",
+          image : [],
+          category : [],
+          subCategory : [],
+          unit : "",
+          stock : "",
+          price : "",
+          discount : "",
+          description : "",
+          more_details : {},
+        })
+      }
+    } catch (error) {
+      AxiosToastError(error);
+    }
+  };
   return (
     <section>
       <div className="p-2 bg-white shadow-md flex items-center justify-between">
@@ -175,7 +204,7 @@ const UploadProduct = () => {
                 {data.image.map((img, index) => {
                   return (
                     <div
-                      key={img + index}
+                      key={img + index + "hello"}
                       className="h-20 mt-2 w-20 min-w-20 bg-blue-50 border relative group"
                     >
                       <div
@@ -224,7 +253,7 @@ const UploadProduct = () => {
               >
                 <option value="">Select Category</option>
                 {allCategory.map((c, index) => {
-                  return <option value={c?._id}>{c.name}</option>;
+                  return <option key={c._id + index + "SElectCATEgory"} value={c?._id}>{c.name}</option>;
                 })}
               </select>
               <div className="flex flex-wrap gap-3">
@@ -254,7 +283,6 @@ const UploadProduct = () => {
             <div>
               <select
                 className="bg-blue-50 border w-full p-2 rounded"
-                
                 value={selectSubCategory}
                 onChange={(e) => {
                   const value = e.target.value;
@@ -275,7 +303,7 @@ const UploadProduct = () => {
                   Select Sub Category
                 </option>
                 {allSubCategory.map((c, index) => {
-                  return <option value={c?._id}>{c.name}</option>;
+                  return <option key={c._id + index + "selectSubCategory"} value={c?._id}>{c.name}</option>;
                 })}
               </select>
               <div className="flex flex-wrap gap-3">
@@ -353,6 +381,7 @@ const UploadProduct = () => {
               placeholder="Enter product discount"
               value={data.discount}
               name="discount"
+              required
               onChange={handleChange}
               className="bg-blue-50 p-2 outline-none border focus-within:border-primary-200 rounded"
             />
@@ -368,11 +397,12 @@ const UploadProduct = () => {
                 </label>
                 <input
                   id={k}
+                  key={index + "fields"}
                   type="text"
                   placeholder=""
                   value={data?.more_details[k]}
                   onChange={(e) => {
-                    const value = e.target.value
+                    const value = e.target.value;
                     setData((prev) => {
                       return {
                         ...prev,
