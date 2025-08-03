@@ -66,13 +66,25 @@ export const getProductController = async (req, res) => {
     }
 
     const query = search ? {
-
+      $text : {
+        $search : search
+      }
     } : {}
     
     const skip = (page - 1) * limit
     const [data, totalCount] = await Promise.all([
-      ProductModel.find().sort({createdAt : -1}).skip(skip).limit(limit)
+      ProductModel.find(query).sort({createdAt : -1}).skip(skip).limit(limit),
+      ProductModel.countDocuments(query)
     ])
+
+    return res.json({
+      message : "Product data",
+      error : false,
+      success: true,
+      totalCount: totalCount,
+      totalNoPage : Math.ceil(totalCount / limit),
+      data : data
+    })
   } catch (error) {
     return res.status(500).json({
       message: error.message || error,
