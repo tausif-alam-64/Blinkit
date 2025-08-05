@@ -2,7 +2,7 @@ import React from 'react'
 import AxiosToastError from '../utils/AxiosToastError'
 import Axios from '../utils/Axios'
 import SummaryApi from '../common/SummaryApi'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 const Product = () => {
     const [productData, setProductData] = useState([])
