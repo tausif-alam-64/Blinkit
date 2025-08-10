@@ -46,25 +46,28 @@ const UploadProduct = () => {
       };
     });
   };
-  const handleUploadImage = async (e) => {
-    const file = e.target.files[0];
 
-    if (!file) {
-      return;
-    }
-    setImageLoading(true);
-    const response = await uploadImage(file);
-    const { data: ImageResponse } = response;
-    const imageUrl = ImageResponse.data.url;
+  
+ const handleUploadImage = async (e) => {
+  const files = Array.from(e.target.files); // read all selected files
+  if (!files.length) return;
+  setImageLoading(true);
+  const formData = new FormData();
+  files.forEach((file) => {
+    formData.append("image", file); // same name as in backend upload.array("image")
+  });
+  const response = await uploadImage(formData); // now we send FormData directly
+  const { data: ImageResponse } = response;
+  if (ImageResponse.success) {
+    const uploadedUrls = ImageResponse.data.map((img) => img.secure_url);
+    setData((prev) => ({
+      ...prev,
+      image: [...prev.image, ...uploadedUrls]
+    }));
+  }
+  setImageLoading(false);
+};
 
-    setData((prev) => {
-      return {
-        ...prev,
-        image: [...prev.image, imageUrl],
-      };
-    });
-    setImageLoading(false);
-  };
 
   const handleDeleteImage = async (index) => {
     data.image.splice(index, 1);
@@ -192,6 +195,7 @@ const UploadProduct = () => {
                 </div>
                 <input
                   type="file"
+                  multiple
                   id="productImage"
                   className="hidden"
                   onChange={handleUploadImage}

@@ -6,6 +6,6 @@ import auth from "../middleware/auth.js";
 
 const uploadRouter = Router();
 
-uploadRouter.post("/upload",auth, upload.single("image"),uploadImageController);
+uploadRouter.post("/upload",auth, upload.array("image", 10),uploadImageController);
 
 export default uploadRouter;
