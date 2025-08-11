@@ -6,7 +6,7 @@ import {Toaster} from "react-hot-toast";
 import fetchUserDetails from "./utils/fetchUserDetails";
 import { useDispatch } from "react-redux";
 import { setUserDetails } from "./store/userSlice";
-import {setAllCategory, setAllSubCategory} from "./store/productSlice"
+import {setAllCategory, setAllSubCategory, setLoadingCategory} from "./store/productSlice"
 import Axios from "./utils/Axios";
 import SummaryApi from "./common/SummaryApi";
 
@@ -21,6 +21,7 @@ const App = () => {
 
    const fetchCategory = async () => {
       try {
+        dispatch(setLoadingCategory(true))
         const response = await Axios({
           ...SummaryApi.getCategory,
         });
@@ -32,6 +33,8 @@ const App = () => {
         }
       } catch (error) {
         return console.error("error while fetching category", error)
+      }finally{
+        dispatch(setLoadingCategory(false))
       }
     };
     const fetchSubCategory = async () => {
