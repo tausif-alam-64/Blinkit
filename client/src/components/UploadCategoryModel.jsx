@@ -103,10 +103,10 @@ const UploadCategoryModel = ({ close, fetchData }) => {
                 
               </div>
               <label htmlFor="uploadCategoryImage">
-                <div className={`${!data.name ? "bg-gray-300" : "border-primary-200 hover:bg-primary-100" } px-4 py-2 rounded cursor-pointer border `}>
+                <div className="border-primary-200 hover:bg-primary-100 px-4 py-2 rounded cursor-pointer border ">
                 Upload Image
               </div>
-              <input type="file" disabled={!data.name} id="uploadCategoryImage" className="hidden" accept="image/*" onChange={handleUploadCategoryImage} />
+              <input type="file" id="uploadCategoryImage" className="hidden" accept="image/*" onChange={handleUploadCategoryImage} />
               </label>
             </div>
           </div>

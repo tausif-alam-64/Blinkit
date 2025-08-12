@@ -28,22 +28,31 @@ const UploadSubCategoryModel = ({ close, fetchData}) => {
   };
 
   const handleUploadSubCategoryImage = async (e) => {
-    const file = e.target.files[0];
+  const files = Array.from(e.target.files);
+  if (!files.length) return;
 
-    if (!file) {
-      return;
-    }
+  const formData = new FormData();
+  files.forEach((file) => {
+    formData.append("image", file);
+  });
 
-    const response = await uploadImage(file);
+  try {
+    const response = await uploadImage(formData);
     const { data: ImageResponse } = response;
 
-    setSubCategoryData((prev) => {
-      return {
+    if (ImageResponse.success && ImageResponse.data.length > 0) {
+      const firstImageUrl = ImageResponse.data[0].secure_url;
+
+      setSubCategoryData((prev) => ({
         ...prev,
-        image: ImageResponse.data.url
-      };
-    });
-  };
+        image: firstImageUrl
+      }));
+    }
+  } catch (error) {
+    console.error("Image upload error:", error);
+  }
+};
+
 
   const handleRemoveCategorySelected = (categoryId) => {
     const index = subCategoryData.category.findIndex(
@@ -116,20 +125,16 @@ const UploadSubCategoryModel = ({ close, fetchData}) => {
               </div>
               <label htmlFor="uploadSubCategoryImage">
                 <div
-                  className={`${
-                    !subCategoryData.name
-                      ? "bg-gray-300"
-                      : "border-primary-200 hover:bg-primary-100"
-                  } px-4 py-2 rounded cursor-pointer border `}
+                  className='border-primary-200 hover:bg-primary-100 px-4 py-2 rounded cursor-pointer border'
                 >
                   Upload Image
                 </div>
                 <input
                   type="file"
-                  disabled={!subCategoryData.name}
                   id="uploadSubCategoryImage"
                   className="hidden"
                   accept="image/*"
+                  multiple
                   onChange={handleUploadSubCategoryImage}
                 />
               </label>
