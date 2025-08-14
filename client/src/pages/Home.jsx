@@ -1,26 +1,26 @@
 import banner from "../assets/banner.jpg";
 import bannerMobile from "../assets/banner-mobile.jpg";
 import { useSelector } from "react-redux";
-import {useNavigate} from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom";
 import { validURLConvert } from "../utils/validURLConvert";
 
 const Home = () => {
   const loadingCategory = useSelector((state) => state.product.loadingCategory);
   const categoryData = useSelector((state) => state.product.allCategory);
-  const subCategoryData = useSelector((state) => state.product.allSubCategory )
+  const subCategoryData = useSelector((state) => state.product.allSubCategory);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const handleRedirectProductListPage = (id, cat) => {
-    const subCategory = subCategoryData.find(sub => {
+    const subCategory = subCategoryData.find((sub) => {
+      return sub.category?.some((c) => String(c._id) === String(id));
+    });
 
-      return sub.category?.some(c => String(c._id) === String(id));
-
-    })
-
-    const url = `/${validURLConvert(cat)}-${id}/${validURLConvert(subCategory.name)}-${subCategory._id}`
-    navigate(url)
-    console.log(subCategory)
-  }
+    const url = `/${validURLConvert(cat)}-${id}/${validURLConvert(
+      subCategory.name
+    )}-${subCategory._id}`;
+    navigate(url);
+    console.log(subCategory);
+  };
 
   return (
     <section className="bg-white">
@@ -42,11 +42,15 @@ const Home = () => {
           />
         </div>
       </div>
+
       <div className="container mx-auto px-4 my-2 grid grid-cols-5 md:grid-cols-7 lg:grid-cols-10 gap-2">
         {loadingCategory
           ? new Array(12).fill(null).map((c, index) => {
               return (
-                <div key={index+"loadingCategory"} className="bg-white rounded p-4 min-h-36 grid gap-2 shadow animate-pulse">
+                <div
+                  key={index + "loadingCategory"}
+                  className="bg-white rounded p-4 min-h-36 grid gap-2 shadow animate-pulse"
+                >
                   <div className="bg-blue-100 min-h-24 rounded"></div>
                   <div className="bg-blue-100 h-8 rounded"></div>
                 </div>
@@ -54,7 +58,12 @@ const Home = () => {
             })
           : categoryData.map((cat, index) => {
               return (
-                <div key={cat._id+"displayCategory"} onClick={() => handleRedirectProductListPage(cat._id, cat.name)}>
+                <div
+                  key={cat._id + "displayCategory"}
+                  onClick={() =>
+                    handleRedirectProductListPage(cat._id, cat.name)
+                  }
+                >
                   <div>
                     <img
                       src={cat.image}
@@ -65,6 +74,14 @@ const Home = () => {
                 </div>
               );
             })}
+      </div>
+
+      {/* display category product */}
+      <div>
+        <div className="container mx-auto p-4 flex items-center justify-between gap-4">
+        <h3>Dairy, Bread & Eggs</h3>
+        <Link to="">See All</Link>
+        </div>
       </div>
     </section>
   );
