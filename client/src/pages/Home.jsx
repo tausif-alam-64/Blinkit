@@ -10,6 +10,7 @@ const Home = () => {
   const subCategoryData = useSelector((state) => state.product.allSubCategory);
 
   const navigate = useNavigate();
+
   const handleRedirectProductListPage = (id, cat) => {
     const subCategory = subCategoryData.find((sub) => {
       return sub.category?.some((c) => String(c._id) === String(id));
@@ -21,6 +22,8 @@ const Home = () => {
     navigate(url);
     console.log(subCategory);
   };
+
+  
 
   return (
     <section className="bg-white">
@@ -79,8 +82,8 @@ const Home = () => {
       {/* display category product */}
       <div>
         <div className="container mx-auto p-4 flex items-center justify-between gap-4">
-        <h3>Dairy, Bread & Eggs</h3>
-        <Link to="">See All</Link>
+        <h3 className="font-semibold text-lg md:text-xl">Dairy, Bread & Eggs</h3>
+        <Link className="text-green-600 hover:text-green-400" to="">See All</Link>
         </div>
       </div>
     </section>
