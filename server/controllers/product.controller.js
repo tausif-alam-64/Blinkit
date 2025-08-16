@@ -100,7 +100,7 @@ export const getProductByCategory = async (req, res) => {
 
     if(!id){
       return res.status(400).json({
-        message: "provide category id",
+        message: "Please provide a valid category id",
         error: true, 
         success : false
       })
