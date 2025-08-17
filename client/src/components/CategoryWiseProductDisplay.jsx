@@ -4,6 +4,8 @@ import AxiosToastError from "../utils/AxiosToastError"
 import Axios from "../utils/Axios"
 import SummaryApi from '../common/SummaryApi'
 import CardLoading from './CardLoading'
+import CardProduct from './CardProduct'
+import { FaAngleLeft, FaAngleRight} from "react-icons/fa6"
 
 const CategoryWiseProductDisplay = ({id, name}) => {
   const [data, setData] = useState([])
@@ -47,17 +49,26 @@ const CategoryWiseProductDisplay = ({id, name}) => {
           { loading &&
             loadingCardNumber.map((_,index) =>{
               return(
-                <CardLoading />
+                <CardLoading key={index+"CategorywiseProduct234"} />
               )
             })
           }
           {
             data.map((p,index) => {
               return(
-                 <div></div>
+                 <CardProduct key={p._id+index+"CategorywiseProduct"} data={p} />
               )
             })
           }
+
+          <div className=' w-full left-0 right-0 container mx-auto px-2 flex justify-between absolute'>
+            <button  >
+              <FaAngleLeft size={30}  />
+            </button>
+            <button className='z-10 relative bg-white hover:bg-gray-100 shadow-lg text-lg p-4 rounded-full'>
+              <FaAngleRight size={30} />
+            </button>
+          </div>
         </div>
       </div>
   )
