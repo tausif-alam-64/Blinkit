@@ -61,12 +61,12 @@ const CategoryWiseProductDisplay = ({id, name}) => {
             })
           }
 
-          <div className=' w-full left-0 right-0 container mx-auto px-2 flex justify-between absolute'>
-            <button  >
-              <FaAngleLeft size={30}  />
+          <div className=' w-full left-0 right-0 container mx-auto px-2 hidden lg:flex justify-between absolute'>
+            <button className='z-10 relative bg-white hover:bg-gray-100 shadow-lg text-lg p-4 rounded-full' >
+              <FaAngleLeft   />
             </button>
             <button className='z-10 relative bg-white hover:bg-gray-100 shadow-lg text-lg p-4 rounded-full'>
-              <FaAngleRight size={30} />
+              <FaAngleRight  />
             </button>
           </div>
         </div>
