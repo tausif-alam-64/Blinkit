@@ -16,15 +16,13 @@ const Home = () => {
     const subCategory = subCategoryData.find((sub) => {
       return sub.category?.some((c) => String(c._id) === String(id));
     });
+    console.log(subCategory);
 
     const url = `/${validURLConvert(cat)}-${id}/${validURLConvert(
       subCategory.name
     )}-${subCategory._id}`;
     navigate(url);
-    console.log(subCategory);
   };
-
-  
 
   return (
     <section className="bg-white">
@@ -81,13 +79,15 @@ const Home = () => {
       </div>
 
       {/* display category product */}
-      {
-        categoryData.map((c,index) => {
-          return(
-            <CategoryWiseProductDisplay key={c._id + "CategoryWiseProduct"} id={c?._id} name={c?.name} />
-          )
-        })
-      }
+      {categoryData.map((c, index) => {
+        return (
+          <CategoryWiseProductDisplay
+            key={c._id + "CategoryWiseProduct"}
+            id={c?._id}
+            name={c?.name}
+          />
+        );
+      })}
     </section>
   );
 };
