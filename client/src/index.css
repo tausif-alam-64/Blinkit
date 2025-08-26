@@ -11,3 +11,16 @@ body {
   font-style: normal;
   @apply bg-blue-50 text-neutral-700;
 }
+
+.scrollbar-none ::-webkit-scrollbar{
+  display: none;
+}
+
+.scrollBarCustom::-webkit-scrollbar{
+  width: 10px;
+  @apply bg-slate-100
+}
+
+.scrollBarCustom::-webkit-scrollbar-thumb{
+  @apply bg-slate-300 rounded-full
+}

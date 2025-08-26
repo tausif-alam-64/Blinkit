@@ -47,7 +47,7 @@ const Home = () => {
 
       <div className="container mx-auto px-4 my-2 grid grid-cols-5 md:grid-cols-7 lg:grid-cols-10 gap-2">
         {loadingCategory
-          ? new Array(12).fill(null).map((c, index) => {
+          ? new Array(20).fill(null).map((c, index) => {
               return (
                 <div
                   key={index + "loadingCategory"}
