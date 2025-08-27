@@ -75,7 +75,7 @@ const ProductListPage = () => {
     <section className="sticky top-24 lg:top-20">
       <div className="container sticky top-24 mx-auto grid grid-cols-[100px,1fr] md:grid-cols-[200px,1fr]">
         {/* sub category */}
-        <div className=" min-h-[79vh] max-h-[79vh] overflow-scroll grid gap-2 shadow-md scrollBarCustom">
+        <div className=" min-h-[79vh] py-2 max-h-[79vh] overflow-scroll grid gap-2 shadow-md scrollBarCustom">
           {
             displaySubCategory.map((s,index) => {
               return (
@@ -83,7 +83,7 @@ const ProductListPage = () => {
                   <div className="w-fit mx-auto">
                     <img src={s.image} alt={s.name} className="w-20 h-full object-scale-down" />
                   </div>
-                  <p className="-mt-5 text-xs text-center">
+                  <p className="-mt-5 text-xs text-center lg:text-base">
                     {s.name}
                   </p>
                 </div>
