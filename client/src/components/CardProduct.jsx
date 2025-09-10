@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { validURLConvert } from '../utils/validURLConvert'
 
 const CardProduct = ({data}) => {
-  const url = `product/${validURLConvert(data.name)}-${data._id}`
+  const url = `/product/${validURLConvert(data.name)}-${data._id}`
   return (
     <Link to={url} className='bg-white border py-3 lg:p-4 grid gap-2 lg:gap-3 min-w-36 lg:min-w-52 rounded cursor-pointer'>
       <div className='min-h-20 w-full max-h-24 lg:max-h-32 rounded'> 
