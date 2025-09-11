@@ -12,18 +12,19 @@ import SummaryApi from "../common/SummaryApi";
 import AxiosToastError from "../utils/AxiosToastError";
 import successAlert from "../utils/SuccessAlert";
 
-const EditProductAdmin = () => {
+const EditProductAdmin = ({close, data : propsData , fetchProductData}) => {
     const [data, setData] = useState({
-    name: "",
-    image: [],
-    category: [],
-    subCategory: [],
-    unit: "",
-    stock: "",
-    price: "",
-    discount: "",
-    description: "",
-    more_details: {},
+    _id : propsData._id,
+    name: propsData.name,
+    image: propsData.image,
+    category: propsData.category,
+    subCategory: propsData.subCategory,
+    unit: propsData.unit,
+    stock: propsData.stock,
+    price: propsData.price,
+    discount: propsData.discount,
+    description: propsData.description,
+    more_details:propsData.more_details || {},
   });
   const [imageLoading, setImageLoading] = useState(false);
   const [viewImageURL, setViewImageURL] = useState("");
@@ -113,7 +114,7 @@ const EditProductAdmin = () => {
     e.preventDefault();
     try {
       const response = await Axios({
-        ...SummaryApi.createProduct,
+        ...SummaryApi.updateProductDetails,
         data: data,
       });
 
@@ -121,6 +122,13 @@ const EditProductAdmin = () => {
 
       if(responseData.success){
         successAlert(responseData.message)
+         fetchProductData()
+        if(close){
+          close()
+        }
+        
+       
+
         setData({
           name : "",
           image : [],
@@ -144,6 +152,9 @@ const EditProductAdmin = () => {
             <section>
       <div className="p-2 bg-white shadow-md flex items-center justify-between">
         <h2 className="font-semibold">Upload Product</h2>
+        <button className="bg-slate-100 hover:bg-slate-200 rounded cursor-pointer" onClick={close}>
+          <IoClose size={20} />
+        </button>
       </div>
       <div className="grid p-3">
         <form className="grid gap-3" onSubmit={handleSubmit}>
@@ -432,7 +443,7 @@ const EditProductAdmin = () => {
             Add Fields
           </div>
           <button className="bg-primary-100 hover:bg-primary-200 py-2 rounded font-semibold">
-            Submit
+            Update Product
           </button>
         </form>
       </div>

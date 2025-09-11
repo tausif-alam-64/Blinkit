@@ -9,6 +9,7 @@ import { DisplayPriceInRupees } from "../utils/DisplayPriceInRupees";
 import image1 from "../assets/minute_delivery.png";
 import image2 from "../assets/Best_prices_Offers.png";
 import image3 from "../assets/Wide_Assortment.png";
+import { DiscountPrice } from "../utils/DiscountPrice";
 
 const ProductDisplayPage = () => {
   const params = useParams();
@@ -113,6 +114,7 @@ const ProductDisplayPage = () => {
             </button>
           </div>
         </div>
+        
       </div>
 
       <div className="p-4 lg:pl-7 text-base lg:text-lg">
@@ -122,21 +124,30 @@ const ProductDisplayPage = () => {
         <Divider />
         <div>
           <p>Price</p>
-          <div>
-            <p>{DisplayPriceInRupees(data.price)}</p>
+          <div className="flex items-center gap-2 lg:gap-4">
+            <div className="border border-green-600 px-4 py-2 rounded bg-green-50 w-fit">
+              <p className="font-semibold text-lg lg:text-xl">
+                {DisplayPriceInRupees(DiscountPrice(data.price, data.discount))}
+              </p>
+            </div>
+            {Boolean(data.discount) && (
+              <p className="line-through">{DisplayPriceInRupees(data.price)}</p>
+            )}
+            {Boolean(data.discount) && (
+              <p className="font-bold text-green-600 lg:text-2xl">
+                {data.discount}%
+                <span className="text-base text-neutral-500"> Discount</span>
+              </p>
+            )}
           </div>
         </div>
-
-        {
-          data.stock === 0 ? (
-            <p className="text-lg text-red-500">Out of stock</p>
-          ) : (
-             <button className="my-4 px-4 py-1 bg-green-600 hover:bg-green-700 text-white rounded">
-          Add
-        </button>
-          )
-        }
-       
+        {data.stock === 0 ? (
+          <p className="text-lg text-red-500 my-2 lg:my-3">Out of stock</p>
+        ) : (
+          <button className="my-4 px-4 py-1 bg-green-600 hover:bg-green-700 text-white rounded">
+            Add
+          </button>
+        )}
 
         <Divider />
 
@@ -173,7 +184,35 @@ const ProductDisplayPage = () => {
             </div>
           </div>
         </div>
+
       </div>
+      <div className="my-4 grid gap-3">
+        <div>
+          <p className="font-semibold">Description</p>
+          <p className="text-base">
+            {data.description}
+          </p>
+        </div>
+        <div>
+          <p className="font-semibold">Unit</p>
+          <p className="text-base">
+            {data.unit}
+          </p>
+        </div>
+        {
+          data?.more_details && Object.keys(data?.more_details).map((element, index) => {
+            return(
+              <div>
+          <p className="font-semibold">{element}</p>
+          <p className="text-base">
+            {data.more_details[element]}
+          </p>
+        </div>
+            )
+          })
+        }
+      </div>
+      
     </section>
   );
 };

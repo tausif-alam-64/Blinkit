@@ -1,4 +1,10 @@
 export const validURLConvert = (name) => {
-    const url = name.toString().replaceAll(" ", "-").replaceAll(",", "-").replaceAll("&", "-")
-    return url
-}
+  if (!name) return ""; // fallback if name is undefined/null
+  return name
+    .toString()
+    .trim()
+    .replaceAll(" ", "-")
+    .replaceAll(",", "-")
+    .replaceAll("&", "-")
+    .toLowerCase();
+};

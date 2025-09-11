@@ -1,16 +1,20 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AxiosToastError from "../utils/AxiosToastError";
 import Axios from "../utils/Axios";
 import SummaryApi from "../common/SummaryApi";
 import CardLoading from "./CardLoading";
 import CardProduct from "./CardProduct";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
+import { validURLConvert } from "../utils/validURLConvert";
+import { useSelector } from "react-redux";
 
 const CategoryWiseProductDisplay = ({ id, name }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const containerRef = useRef();
+   const subCategoryData = useSelector((state) => state.product.allSubCategory);
+
 
   const fetchCategoryWiseProduct = async () => {
     try {
@@ -46,11 +50,23 @@ const CategoryWiseProductDisplay = ({ id, name }) => {
   };
 
   const loadingCardNumber = new Array(7).fill(null);
+
+  const handleRedirectProductListPage = (id, name) => {
+      const subCategory = subCategoryData.find((sub) => {
+        return sub.category?.some((c) => String(c._id) === String(id));
+      });
+      console.log("hii",subCategory)
+      const url = `/${validURLConvert(name)}-${id}/${validURLConvert(subCategory?.name)}-${subCategory?._id}`;
+      return url;
+    };
+
+    const redirectUrl = handleRedirectProductListPage(id, name)
+
   return (
     <div>
       <div className="container mx-auto p-4 flex items-center justify-between gap-4">
         <h3 className="font-semibold text-lg md:text-xl">{name}</h3>
-        <Link className="text-green-600 hover:text-green-400" to="">
+        <Link to={redirectUrl} className="text-green-600 hover:text-green-400">
           See All
         </Link>
       </div>
