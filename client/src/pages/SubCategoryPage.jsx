@@ -56,7 +56,6 @@ const SubCategoryPage = () => {
     columnHelper.accessor("image", {
       header: "Image",
       cell: ({ row }) => {
-        console.log("row", row.original.image);
         return (
           <div className="flex justify-center items-center">
             <img

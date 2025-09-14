@@ -8,33 +8,53 @@ import { BsCart4 } from "react-icons/bs";
 import { useSelector } from "react-redux";
 import { GoTriangleDown, GoTriangleUp } from "react-icons/go";
 import UserManu from "./UserManu";
+import { useEffect } from "react";
+import { DisplayPriceInRupees } from "../utils/DisplayPriceInRupees";
 
 const Header = () => {
   const [isMobile] = useMobile();
   const location = useLocation();
   const navigate = useNavigate();
   const [openUserMenu, setOpenUserMenu] = useState(false);
+  const [totalPrice, setTotalPrice] = useState(0)
+  const [totalQty, setTotalQty] = useState(0)
+
+  const cartItem = useSelector((state) => state?.cartItem.cart);
 
   const user = useSelector((state) => state?.user);
 
   const handleCloseUserMenu = () => {
-      setOpenUserMenu(false)
-  }
+    setOpenUserMenu(false);
+  };
 
   const handleMobileUser = () => {
-     if(!user._id){
+    if (!user._id) {
       navigate("/login");
       return;
-     }
+    }
 
-     navigate("/user")
-  }
-
-  const isSearchPage = location.pathname === "/search";
+    navigate("/user");
+  };
 
   const redirectToLoginPage = () => {
     navigate("/login");
   };
+
+  const isSearchPage = location.pathname === "/search";
+
+  useEffect(() => {
+    const qty = cartItem.reduce((prev, curr)=>{
+      return prev + curr.quantity
+    }, 0)
+    setTotalQty(qty)
+
+    const totalPrice = cartItem.reduce((prev, curr) => {
+      return prev + (curr.productId.price * curr.quantity)
+    }, 0)
+
+    setTotalPrice(totalPrice)
+    console.log(cartItem)
+  }, [cartItem])
 
   return (
     <header className="h-24 lg:h-20 lg:shadow-md sticky top-0 z-50 flex flex-col justify-center gap-1 bg-white">
@@ -63,7 +83,10 @@ const Header = () => {
           </div>
           <div>
             {/* user icon display in only mobile version */}
-            <button className="text-neutral-600 lg:hidden" onClick={handleMobileUser}>
+            <button
+              className="text-neutral-600 lg:hidden"
+              onClick={handleMobileUser}
+            >
               <FaRegCircleUser size={26} />
             </button>
 
@@ -101,7 +124,18 @@ const Header = () => {
                   <BsCart4 size={25} />
                 </div>
                 <div className="font-semibold">
-                  <p>My Cart</p>
+                  {
+                    cartItem[0] ? (
+                      <div>
+                        <p>
+                          {totalQty} Items
+                        </p>
+                        <p>{DisplayPriceInRupees(totalPrice)}</p>
+                      </div>
+                    ):(
+                      <p>My Cart</p>
+                    )
+                  }
                 </div>
               </button>
             </div>

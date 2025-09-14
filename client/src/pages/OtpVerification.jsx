@@ -74,7 +74,6 @@ const OtpVerification = () => {
                     value={data[index]}
                     onChange={(e) => {
                       const value = e.target.value;
-                      console.log("value", value);
                       let newData = [...data];
                       newData[index] = value;
                       setDeta(newData);

@@ -55,7 +55,6 @@ const CategoryWiseProductDisplay = ({ id, name }) => {
       const subCategory = subCategoryData.find((sub) => {
         return sub.category?.some((c) => String(c._id) === String(id));
       });
-      console.log("hii",subCategory)
       const url = `/${validURLConvert(name)}-${id}/${validURLConvert(subCategory?.name)}-${subCategory?._id}`;
       return url;
     };

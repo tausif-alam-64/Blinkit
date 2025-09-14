@@ -19,7 +19,6 @@ const Product = () => {
 
             const {data : responseData} = response
 
-            console.log("data", responseData)
             
             if(responseData.success){
                 setProductData(responseData.data)

@@ -27,7 +27,7 @@ const auth = (req, res, next) => {
 
    } catch (error) {
     return res.status(500).json({
-        message: error.message || error,
+        message: "you ha not login",
         error: true, 
         success: false
     })

@@ -20,7 +20,6 @@ const ProductListPage = () => {
   const params = useParams();
 
   const allSubCategory = useSelector((state) => state.product.allSubCategory);
-  console.log(allSubCategory);
 
   const categoryId = params.category.split("-").slice(-1)[0];
   const subCategoryId = params.subCategory.split("-").slice(-1)[0];

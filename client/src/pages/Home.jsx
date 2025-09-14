@@ -16,7 +16,6 @@ const Home = () => {
     const subCategory = subCategoryData.find((sub) => {
       return sub.category?.some((c) => String(c._id) === String(id));
     });
-    console.log(subCategory);
 
     const url = `/${validURLConvert(cat)}-${id}/${validURLConvert(
       subCategory.name

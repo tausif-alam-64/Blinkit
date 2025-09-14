@@ -56,7 +56,6 @@ const EditCategory = ({ close, fetchData, data: CategoryData }) => {
     
     setLoading(true)
     const response = await uploadImage(file);
-    console.log("Upload image response:", response);
     const { data: ImageResponse } = response;
     setLoading(false)
 

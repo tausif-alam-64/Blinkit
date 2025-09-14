@@ -9,6 +9,8 @@ import { setUserDetails } from "./store/userSlice";
 import {setAllCategory, setAllSubCategory, setLoadingCategory} from "./store/productSlice"
 import Axios from "./utils/Axios";
 import SummaryApi from "./common/SummaryApi";
+import GlobalProvider from "./provider/globalProvider";
+
 
 const App = () => {
   
@@ -52,6 +54,7 @@ const App = () => {
         return console.error("error while fetching category", error)
       }
     };
+    
   
 
   useEffect(() => {
@@ -60,14 +63,14 @@ const App = () => {
     fetchSubCategory();
   }, [])
   return (
-    <>
+    <GlobalProvider>
       <Header />
       <main className="min-h-[78vh]">
         <Outlet />
       </main>
       <Footer />
       <Toaster />
-    </>
+    </GlobalProvider>
   );
 };
 
