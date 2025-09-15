@@ -4,16 +4,17 @@ import Header from "./components/Header.";
 import Footer from "./components/Footer";
 import {Toaster} from "react-hot-toast";
 import fetchUserDetails from "./utils/fetchUserDetails";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setUserDetails } from "./store/userSlice";
 import {setAllCategory, setAllSubCategory, setLoadingCategory} from "./store/productSlice"
 import Axios from "./utils/Axios";
 import SummaryApi from "./common/SummaryApi";
 import GlobalProvider from "./provider/globalProvider";
+import { FaCartPlus } from "react-icons/fa";
 
 
 const App = () => {
-  
+
   const dispatch = useDispatch();
 
   const fetchUser = async () => {
@@ -62,6 +63,8 @@ const App = () => {
     fetchCategory();
     fetchSubCategory();
   }, [])
+
+
   return (
     <GlobalProvider>
       <Header />
@@ -70,6 +73,21 @@ const App = () => {
       </main>
       <Footer />
       <Toaster />
+      <div className=" p-2 sticky bottom-4">
+        <div className="bg-green-700 p-2 rounded text-neutral-100">
+          <div>
+            <div>
+              <FaCartPlus />
+            </div>
+            <div>
+              <p></p>
+            </div>
+          </div>
+          <div>
+
+          </div>
+        </div>
+      </div>
     </GlobalProvider>
   );
 };

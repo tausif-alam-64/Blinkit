@@ -8,16 +8,16 @@ import { BsCart4 } from "react-icons/bs";
 import { useSelector } from "react-redux";
 import { GoTriangleDown, GoTriangleUp } from "react-icons/go";
 import UserManu from "./UserManu";
-import { useEffect } from "react";
 import { DisplayPriceInRupees } from "../utils/DisplayPriceInRupees";
+import { useGlobalContext } from "../provider/globalProvider";
 
 const Header = () => {
   const [isMobile] = useMobile();
   const location = useLocation();
   const navigate = useNavigate();
   const [openUserMenu, setOpenUserMenu] = useState(false);
-  const [totalPrice, setTotalPrice] = useState(0)
-  const [totalQty, setTotalQty] = useState(0)
+
+  const {totalPrice, totalQty} = useGlobalContext()
 
   const cartItem = useSelector((state) => state?.cartItem.cart);
 
@@ -41,20 +41,6 @@ const Header = () => {
   };
 
   const isSearchPage = location.pathname === "/search";
-
-  useEffect(() => {
-    const qty = cartItem.reduce((prev, curr)=>{
-      return prev + curr.quantity
-    }, 0)
-    setTotalQty(qty)
-
-    const totalPrice = cartItem.reduce((prev, curr) => {
-      return prev + (curr.productId.price * curr.quantity)
-    }, 0)
-
-    setTotalPrice(totalPrice)
-    console.log(cartItem)
-  }, [cartItem])
 
   return (
     <header className="h-24 lg:h-20 lg:shadow-md sticky top-0 z-50 flex flex-col justify-center gap-1 bg-white">
@@ -127,10 +113,10 @@ const Header = () => {
                   {
                     cartItem[0] ? (
                       <div>
-                        <p>
+                        <p className="text-slate-200">
                           {totalQty} Items
                         </p>
-                        <p>{DisplayPriceInRupees(totalPrice)}</p>
+                        <p className="">{DisplayPriceInRupees(totalPrice)}</p>
                       </div>
                     ):(
                       <p>My Cart</p>
