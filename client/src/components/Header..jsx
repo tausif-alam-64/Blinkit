@@ -10,12 +10,14 @@ import { GoTriangleDown, GoTriangleUp } from "react-icons/go";
 import UserManu from "./UserManu";
 import { DisplayPriceInRupees } from "../utils/DisplayPriceInRupees";
 import { useGlobalContext } from "../provider/globalProvider";
+import DisplayCartItem from "./DisplayCartItem";
 
 const Header = () => {
   const [isMobile] = useMobile();
   const location = useLocation();
   const navigate = useNavigate();
   const [openUserMenu, setOpenUserMenu] = useState(false);
+  const [openCartSection, setOpenCartSection] = useState(false)
 
   const {totalPrice, totalQty} = useGlobalContext()
 
@@ -104,12 +106,12 @@ const Header = () => {
                   login
                 </button>
               )}
-              <button className="flex items-center gap-2 bg-green-800 hover:bg-green-700 px-2 py-2 rounded text-white">
+              <button onClick={() => setOpenCartSection(true)} className="flex items-center gap-2 bg-green-800 hover:bg-green-700 px-2 py-2 rounded text-white">
                 {/* Add to cart icons */}
                 <div className="animate-bounce">
                   <BsCart4 size={25} />
                 </div>
-                <div className="font-semibold">
+                <div className="font-semibold text-sm">
                   {
                     cartItem[0] ? (
                       <div>
@@ -132,6 +134,11 @@ const Header = () => {
       <div className="container mx-auto px-2 lg:hidden">
         <Search />
       </div>
+      {
+        openCartSection && (
+          <DisplayCartItem close={() => setOpenCartSection(false)} />
+        )
+      }
     </header>
   );
 };

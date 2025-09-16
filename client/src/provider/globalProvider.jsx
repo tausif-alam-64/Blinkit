@@ -8,6 +8,7 @@ import AxiosToastError from "../utils/AxiosToastError";
 import toast from "react-hot-toast";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import {DiscountPrice} from "../utils/DiscountPrice.js"
 
 const GlobalContext = createContext(null);
 
@@ -17,6 +18,7 @@ const GlobalProvider = ({ children }) => {
   const dispatch = useDispatch();
   const [totalPrice, setTotalPrice] = useState(0);
   const [totalQty, setTotalQty] = useState(0);
+  const [notDiscountTotalPrice, setNotDiscountTotalPrice] = useState(0)
 
   const cartItem = useSelector((state) => state?.cartItem.cart);
 
@@ -87,11 +89,16 @@ const GlobalProvider = ({ children }) => {
     setTotalQty(qty);
 
     const totalPrice = cartItem.reduce((prev, curr) => {
-      return prev + curr.productId.price * curr.quantity;
+      const priceAfterDiscount = DiscountPrice(curr?.productId?.price, curr?.productId?.discount)
+      return prev + (priceAfterDiscount * curr.quantity);
     }, 0);
 
     setTotalPrice(totalPrice);
-    console.log(cartItem);
+
+    const notDiscountPrice = cartItem.reduce((prev, curr) => {
+      return prev + (curr?.productId?.price * curr.quantity)
+    }, 0)
+    setNotDiscountTotalPrice(notDiscountPrice)
   }, [cartItem]);
 
   return (
@@ -102,6 +109,7 @@ const GlobalProvider = ({ children }) => {
         deleteCartItem,
         totalPrice,
         totalQty,
+        notDiscountTotalPrice,
       }}
     >
       {children}

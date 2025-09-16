@@ -10,7 +10,7 @@ import {setAllCategory, setAllSubCategory, setLoadingCategory} from "./store/pro
 import Axios from "./utils/Axios";
 import SummaryApi from "./common/SummaryApi";
 import GlobalProvider from "./provider/globalProvider";
-import { FaCartPlus } from "react-icons/fa";
+import CartMobile from "./components/CartMobile";
 
 
 const App = () => {
@@ -73,21 +73,7 @@ const App = () => {
       </main>
       <Footer />
       <Toaster />
-      <div className=" p-2 sticky bottom-4">
-        <div className="bg-green-700 p-2 rounded text-neutral-100">
-          <div>
-            <div>
-              <FaCartPlus />
-            </div>
-            <div>
-              <p></p>
-            </div>
-          </div>
-          <div>
-
-          </div>
-        </div>
-      </div>
+       <CartMobile />
     </GlobalProvider>
   );
 };
