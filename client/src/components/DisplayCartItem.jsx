@@ -8,11 +8,23 @@ import { DiscountPrice } from "../utils/DiscountPrice";
 import AddToCartButton from "./AddToCartButton";
 import { FaCaretRight } from "react-icons/fa";
 import imageEmpty from "../assets/empty_cart.webp";
+import toast from "react-hot-toast";
 
 const DisplayCartItem = ({ close }) => {
   const { notDiscountTotalPrice, totalPrice, totalQty } = useGlobalContext();
   const cartItem = useSelector((state) => state.cartItem.cart);
   const user = useSelector((state) => state.user);
+  const navigate = useNavigate()
+
+  const redirectToCheckOutPage = () => {
+    if(user?._id) {
+      navigate("/checkout")
+      if(close){
+        close()
+      }
+      return
+    }
+  }
 
   return (
     <section className="bg-neutral-900 fixed top-0 left-0 right-0 bottom-0 bg-opacity-70 z-50">
@@ -128,7 +140,7 @@ const DisplayCartItem = ({ close }) => {
           <div className="p-2">
             <div className="bg-green-700 text-neutral-100 px-4 font-bold text-base py-4 static bottom-3 rounded flex items-center gap-4 justify-between">
               <div>{DisplayPriceInRupees(totalPrice)}</div>
-              <button className="flex items-center gap-1">
+              <button onClick={() => redirectToCheckOutPage()} className="flex items-center gap-1">
                 Proceed{" "}
                 <span>
                   <FaCaretRight />
