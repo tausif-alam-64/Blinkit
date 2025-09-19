@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import {DiscountPrice} from "../utils/DiscountPrice.js"
+import { handleAddAddress } from "../store/addressSlice.js";
 
 const GlobalContext = createContext(null);
 
@@ -82,11 +83,27 @@ const GlobalProvider = ({ children }) => {
   const handleLogOut = () => {
     localStorage.clear()
     dispatch(handleAddItemCart([]))
+  };
+
+  const fetchAddress = async () => {
+    try {
+      const response = await Axios({
+        ...SummaryApi.getAddress,
+      })
+      const {data : responseData} = response
+
+      if(responseData.success){
+        dispatch(handleAddAddress(responseData.data))
+      }
+    } catch (error) {
+      AxiosToastError(error)
+    }
   }
 
   useEffect(() => {
     fetchCartItems();
     handleLogOut()
+    fetchAddress()
   }, [user]);
 
   useEffect(() => {
@@ -114,6 +131,7 @@ const GlobalProvider = ({ children }) => {
         fetchCartItems,
         updateQuantity,
         deleteCartItem,
+        fetchAddress,
         totalPrice,
         totalQty,
         notDiscountTotalPrice,

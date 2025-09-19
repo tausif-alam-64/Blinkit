@@ -11,6 +11,7 @@ import uploadRouter from "./routes/upload.router.js";
 import subCategoryRouter from "./routes/subCategory.route.js";
 import productRouter from "./routes/product.route.js";
 import cartRouter from "./routes/cart.route.js";
+import addressRouter from "./routes/address.rout.js";
 
 dotenv.config();
 
@@ -46,6 +47,7 @@ app.use("/api/file",uploadRouter)
 app.use("/api/subcategory", subCategoryRouter)
 app.use("/api/product",productRouter)
 app.use("/api/cart", cartRouter)
+app.use("/api/address", addressRouter)
 
 connectDB().then(() => {
   app.listen(PORT, () => {console.log("server is running on port", PORT)})

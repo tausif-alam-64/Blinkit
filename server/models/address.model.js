@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const addressSchema = new mongoose({
+const addressSchema = new mongoose.Schema({
     address_line : {
         type: String, 
         default : ""
@@ -26,6 +26,10 @@ const addressSchema = new mongoose({
     status : {
         type: Boolean,
         default: true
+    },
+    userId: {
+        type : mongoose.Schema.ObjectId,
+        default : ""
     }
 },{
     timestamps : true
