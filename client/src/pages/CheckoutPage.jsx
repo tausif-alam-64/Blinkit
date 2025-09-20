@@ -9,9 +9,9 @@ const CheckoutPage = () => {
   const { notDiscountTotalPrice, totalPrice, totalQty } = useGlobalContext();
   const [openAddress, setOpenAddress] = useState(false);
   const addressList = useSelector((state) => state.addresses.addressList);
-  
+
   const [selectAddress, setSelectAddress] = useState(0);
-  console.log(addressList)
+  console.log(addressList[selectAddress])
   return (
     <section className="bg-blue-50">
       <div className="container mx-auto p-4 flex flex-col lg:flex-row w-full gap-5 justify-between">
@@ -21,7 +21,7 @@ const CheckoutPage = () => {
           <div className="bg-white p-2 grid gap-4">
             {addressList.map((address, index) => {
               return (
-                <label htmlFor={"address" + index} className={""}>
+                <label htmlFor={"address" + index} className={`${!address.status && "hidden"}`} key={"address"+index}>
                   <div className="border rounded p-3 flex gap-3 hover:bg-blue-50">
                     <div>
                       <input
@@ -85,7 +85,7 @@ const CheckoutPage = () => {
               Online Payment
             </button>
 
-            <button className="py-2 px-4 border-2 border-green-600 rounded font-semibold text-green-600 hover:bg-green-600 hover:text-white">
+            <button className="py-2 px-4  border-2 border-green-600 rounded font-semibold text-green-600 hover:bg-green-600 hover:text-white">
               Cash on Delivery
             </button>
           </div>

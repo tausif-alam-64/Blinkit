@@ -43,7 +43,7 @@ export const getAddresscontroller = async (req, res) => {
     try {
         const userId = req.userId
 
-        const data = await AdressModel.find({userId : userId})
+        const data = await AdressModel.find({userId : userId}).sort({createdAt:-1})
 
         return res.json({
             message : "List of address",
@@ -59,3 +59,62 @@ export const getAddresscontroller = async (req, res) => {
         })
     }
 }
+
+export const updateAddressController = async (req, res) => {
+    try {
+        const userId = req.userId
+        const {_id, address_line, city, state, country, pincode, mobile } = req.body
+
+        const updateAddress = await AdressModel.updateOne({_id : _id, userId : userId}, {
+            address_line, 
+            city, 
+            state, 
+            country, 
+            pincode, 
+            mobile
+        })
+        return (
+            res.json({
+                message : "Address Updated",
+                error : false,
+                success: true,
+                data : updateAddress
+            })
+        )
+    } catch (error) {
+        return res.status(500).json({
+            message : error.message || error,
+            error : true,
+            success : false
+        })
+    }
+}
+
+export const deleteAddressController = async(req, res) => {
+    try {
+        const userId = req.userId
+        const {_id} = req.body
+
+        const deleteAddress = await AdressModel.updateOne({_id : _id, userId : userId},{
+            status : false
+        })
+
+        return (
+            res.json({
+                message: "Address Deleted",
+                error : false,
+                success : true,
+                data : deleteAddress
+            })
+        )
+    } catch (error) {
+        return (
+            res.status(500).json({
+                message : error.message || error,
+                error : true,
+                success : false
+            })
+        )
+    }
+}
+
