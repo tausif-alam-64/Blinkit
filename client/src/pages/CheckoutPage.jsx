@@ -49,6 +49,23 @@ const CheckoutPage = () => {
       AxiosToastError(error)
     }
   }
+  const handleOnlinePayment = async () => {
+    try {
+      const response = await Axios({
+            ...SummaryApi.payment_url,
+            data : {
+              list_items : cartItemsList,
+              addressId : addressList[selectAddress]?._id,
+              subTotalAmt : totalPrice,
+              totalAmt :  totalPrice,
+            }
+        })
+
+        const {data : responseData} = response
+    } catch (error) {
+      AxiosToastError(error)
+    }
+  }
 
   return (
     <section className="bg-blue-50">
@@ -119,7 +136,7 @@ const CheckoutPage = () => {
             </div>
           </div>
           <div className="w-full flex flex-col gap-4">
-            <button className="py-2 px-4 bg-green-600 hover:bg-green-700 rounded text-white font-semibold">
+            <button onClick={handleOnlinePayment} className="py-2 px-4 bg-green-600 hover:bg-green-700 rounded text-white font-semibold">
               Online Payment
             </button>
 
