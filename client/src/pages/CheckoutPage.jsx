@@ -9,9 +9,10 @@ import Axios from "../utils/Axios";
 import SummaryApi from "../common/SummaryApi";
 import toast from "react-hot-toast";
 import {useNavigate} from "react-router-dom"
-
+import {loadStripe} from "@stripe/stripe-js"
+ 
 const CheckoutPage = () => {
-  const { notDiscountTotalPrice, totalPrice, totalQty, fetchCartItems } = useGlobalContext();
+  const { notDiscountTotalPrice, totalPrice, totalQty, fetchCartItems, fetchOrder } = useGlobalContext();
   const [openAddress, setOpenAddress] = useState(false);
   const addressList = useSelector((state) => state.addresses.addressList);
   const cartItemsList = useSelector(state => state.cartItem.cart)
@@ -39,6 +40,9 @@ const CheckoutPage = () => {
         if(fetchCartItems){
           fetchCartItems()
         }
+        if(fetchOrder){
+          fetchOrder()
+        }
         navigate("/success", {
           state : {
             text : "Order"
@@ -51,6 +55,9 @@ const CheckoutPage = () => {
   }
   const handleOnlinePayment = async () => {
     try {
+      toast.loading("Loading...")
+      const stripPublicKey = import.meta.env.VITE_STRIPE_PUBLIC_KEY
+      const stripPromise = await loadStripe(stripPublicKey)
       const response = await Axios({
             ...SummaryApi.payment_url,
             data : {
@@ -62,6 +69,16 @@ const CheckoutPage = () => {
         })
 
         const {data : responseData} = response
+
+        stripPromise.redirectToCheckout({ sessionId : responseData.id})
+        
+        if(fetchCartItems){
+          fetchCartItems()
+        }
+        if(fetchOrder){
+          fetchOrder()
+        }
+
     } catch (error) {
       AxiosToastError(error)
     }

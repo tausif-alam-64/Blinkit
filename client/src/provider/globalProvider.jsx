@@ -10,6 +10,7 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import {DiscountPrice} from "../utils/DiscountPrice.js"
 import { handleAddAddress } from "../store/addressSlice.js";
+import { setOrder } from "../store/orderSlice.js";
 
 const GlobalContext = createContext(null);
 
@@ -100,10 +101,26 @@ const GlobalProvider = ({ children }) => {
     }
   }
 
+  const fetchOrder = async () => {
+    try {
+      const response = await Axios({
+        ...SummaryApi.getOrderItems,
+      })
+      const {data : responseData} = response
+
+      if(responseData.success){
+        dispatch(setOrder(responseData.data))
+      }
+    } catch (error) {
+      AxiosToastError(error)
+    }
+  }
+
   useEffect(() => {
     fetchCartItems();
     handleLogOut()
     fetchAddress()
+    fetchOrder()
   }, [user]);
 
   useEffect(() => {
@@ -132,6 +149,7 @@ const GlobalProvider = ({ children }) => {
         updateQuantity,
         deleteCartItem,
         fetchAddress,
+        fetchOrder,
         totalPrice,
         totalQty,
         notDiscountTotalPrice,
