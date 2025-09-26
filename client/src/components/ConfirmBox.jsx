@@ -3,27 +3,37 @@ import { IoClose } from "react-icons/io5";
 
 const ConfirmBox = ({ cancel, confirm, close }) => {
   return (
-    <div className=" fixed top-0 bottom-0 left-0 right-0 z-50 bg-neutral-800 bg-opacity-70 flex justify-center items-center p-4">
-      <div className="bg-white w-full max-w-md p-4 rounded">
-        <div className="flex justify-between items-center gap-3">
-          <h1 className="font-semibold py-3">Permanent Delete</h1>
-          <button className="hover:bg-gray-200 rounded" onClick={close}>
-            <IoClose size={25} />
+    <div className="fixed inset-0 z-50 bg-black bg-opacity-40 flex justify-center items-center p-4">
+      <div className="bg-white w-full max-w-sm p-6 rounded-lg shadow-md">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-lg font-semibold text-gray-800">Delete Item</h2>
+          <button
+            onClick={close}
+            className="p-1 rounded hover:bg-gray-200 transition"
+          >
+            <IoClose size={24} />
           </button>
         </div>
-        <p className="my-3">Are you sure Permanent delete ?</p>
-        <div className="w-fit ml-auto flex items-center gap-3">
+
+        {/* Message */}
+        <p className="text-gray-600 mb-6">
+          Are you sure you want to permanently delete this item?
+        </p>
+
+        {/* Actions */}
+        <div className="flex justify-end gap-3">
           <button
             onClick={cancel}
-            className="px-4 py-1  border rounded border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
+            className="px-4 py-2 border border-gray-300 rounded text-gray-700 hover:bg-gray-100 transition"
           >
             Cancel
           </button>
           <button
             onClick={confirm}
-            className="px-4 py-1 border rounded border-green-600 text-green-600 hover:bg-green-600 hover:text-white"
+            className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
           >
-            Confirm
+            Delete
           </button>
         </div>
       </div>

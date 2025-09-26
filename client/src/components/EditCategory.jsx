@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { IoClose } from "react-icons/io5";
+import Axios from "../utils/Axios";
 import SummaryApi from "../common/SummaryApi";
 import uploadImage from "../utils/UploadImage";
 import toast from "react-hot-toast";
-import Axios from "../utils/Axios";
 
 const EditCategory = ({ close, fetchData, data: CategoryData }) => {
   const [data, setData] = useState({
@@ -11,18 +11,11 @@ const EditCategory = ({ close, fetchData, data: CategoryData }) => {
     name: CategoryData.name,
     image: CategoryData.image,
   });
-
   const [loading, setLoading] = useState(false);
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
-
-    setData((prev) => {
-      return {
-        ...prev,
-        [name]: value,
-      };
-    });
+    setData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
@@ -31,16 +24,15 @@ const EditCategory = ({ close, fetchData, data: CategoryData }) => {
       setLoading(true);
       const response = await Axios({
         ...SummaryApi.updateCategory,
-        data: data,
+        data,
       });
-      const { data: responseData } = response;
-      if (responseData.success) {
-        toast.success(responseData.message);
+      if (response.data.success) {
+        toast.success(response.data.message);
         close();
         fetchData();
       }
     } catch (error) {
-      console.error(error)
+      console.error(error);
       toast.error(error?.response?.data?.message || "Something went wrong");
     } finally {
       setLoading(false);
@@ -49,93 +41,99 @@ const EditCategory = ({ close, fetchData, data: CategoryData }) => {
 
   const handleUploadCategoryImage = async (e) => {
     const file = e.target.files[0];
+    if (!file) return;
 
-    if (!file) {
-      return;
-    }
-    
-    setLoading(true)
+    setLoading(true);
     const response = await uploadImage(file);
-    const { data: ImageResponse } = response;
-    setLoading(false)
+    setLoading(false);
 
-    setData((prev) => {
-      return {
-        ...prev,
-        image: ImageResponse?.data?.url,
-      };
-    });
+    setData((prev) => ({ ...prev, image: response?.data?.url }));
   };
 
   return (
-    <section className="fixed top-0 bottom-0 right-0 left-0 p-4 bg-neutral-800 bg-opacity-60 flex items-center justify-center">
-      <div className="bg-white max-w-4xl w-full p-4 rounded">
-        <div className="flex items-center justify-between">
-          <h1 className="font-semibold">Update Category</h1>
-          <button onClick={close} className="w-fit block ml-auto ">
-            <IoClose size={25} />
+    <div className="fixed inset-0 z-50 bg-black bg-opacity-40 flex items-center justify-center p-4">
+      <div className="bg-white w-full max-w-lg p-6 rounded-lg shadow-lg">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold text-gray-800">Update Category</h2>
+          <button
+            onClick={close}
+            className="p-1 rounded hover:bg-gray-200 transition"
+          >
+            <IoClose size={24} />
           </button>
         </div>
-        <form className="mx-3 grid gap-2" onSubmit={handleSubmit}>
-          <div className="grid gap-1">
-            <label htmlFor="categoryName">Name</label>
+
+        {/* Form */}
+        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+          {/* Category Name */}
+          <div className="flex flex-col gap-1">
+            <label htmlFor="categoryName" className="text-gray-700">
+              Name
+            </label>
             <input
-              className="bg-blue-50 p-2 border border-blue-100 focus-within:border-primary-200 outline-none rounded"
               type="text"
               id="categoryName"
-              placeholder="Enter category name"
-              value={data.name}
               name="name"
+              value={data.name}
               onChange={handleOnChange}
+              placeholder="Enter category name"
+              className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
           </div>
-          <div className="gird gap-1 ">
-            <p>Image</p>
-            <div className="flex gap-4 flex-col lg:flex-row items-center">
-              <div className="bg-blue-50 h-36 w-full lg:w-36 flex items-center justify-center rounded">
+
+          {/* Category Image */}
+          <div className="flex flex-col gap-2">
+            <p className="text-gray-700">Image</p>
+            <div className="flex flex-col lg:flex-row items-center gap-4">
+              <div className="bg-white h-36 w-full lg:w-36 rounded flex items-center justify-center">
                 {data.image ? (
                   <img
                     src={data.image}
                     alt="category"
-                    className="w-full h-full object-scale-down"
+                    className="w-full h-full object-scale-down rounded"
                   />
                 ) : (
-                  <p className="text-sm text-neutral-500">No image</p>
+                  <span className="text-gray-400 text-sm">No image</span>
                 )}
               </div>
               <label htmlFor="uploadCategoryImage">
                 <div
-                  className={`${
+                  className={`px-4 py-2 rounded border cursor-pointer text-center transition ${
                     !data.name
-                      ? "bg-gray-300"
-                      : "border-primary-200 hover:bg-primary-100"
-                  } px-4 py-2 rounded cursor-pointer border `}
+                      ? "bg-gray-200 border-gray-200 text-gray-500 cursor-not-allowed"
+                      : "bg-white border-blue-400 text-blue-600 hover:bg-blue-50"
+                  }`}
                 >
-                  {loading ? "Loading..." : "Upload Image"}
+                  {loading ? "Uploading..." : "Upload Image"}
                 </div>
                 <input
                   type="file"
-                  disabled={!data.name}
                   id="uploadCategoryImage"
                   className="hidden"
                   accept="image/*"
                   onChange={handleUploadCategoryImage}
+                  disabled={!data.name || loading}
                 />
               </label>
             </div>
           </div>
+
+          {/* Submit Button */}
           <button
-            className={`${
-              data.image && data.name
-                ? "bg-primary-200 hover:bg-primary-100"
-                : "bg-gray-300 "
-            } py-2 font-semibold `}
+            type="submit"
+            disabled={!data.name || !data.image || loading}
+            className={`py-2 rounded text-white font-medium transition ${
+              data.name && data.image
+                ? "bg-blue-600 hover:bg-blue-700"
+                : "bg-gray-400 cursor-not-allowed"
+            }`}
           >
-            Update Category
+            {loading ? "Updating..." : "Update Category"}
           </button>
         </form>
       </div>
-    </section>
+    </div>
   );
 };
 

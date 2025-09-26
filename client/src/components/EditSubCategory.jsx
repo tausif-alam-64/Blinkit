@@ -1,210 +1,200 @@
 import React, { useState } from "react";
-import { IoClose, IoCloseCircle } from "react-icons/io5";
-import uploadImage from "../utils/UploadImage";
+import { IoClose } from "react-icons/io5";
 import { useSelector } from "react-redux";
 import Axios from "../utils/Axios";
 import SummaryApi from "../common/SummaryApi";
-import toast from "react-hot-toast"
-import AxiosToastError from "../utils/AxiosToastError"
+import uploadImage from "../utils/UploadImage";
+import toast from "react-hot-toast";
+import AxiosToastError from "../utils/AxiosToastError";
 
 const EditSubCategory = ({ close, data, fetchData }) => {
   const [subCategoryData, setSubCategoryData] = useState({
-    _id : data._id,
+    _id: data._id,
     name: data.name,
     image: data.image,
-    category: data.category || []
+    category: data.category || [],
   });
 
   const allCategory = useSelector((state) => state.product.allCategory);
+  const [loading, setLoading] = useState(false);
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
-
-    setSubCategoryData((prev) => {
-      return {
-        ...prev,
-        [name]: value,
-      };
-    });
+    setSubCategoryData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleUploadSubCategoryImage = async (e) => {
     const file = e.target.files[0];
+    if (!file) return;
 
-    if (!file) {
-      return;
-    }
-
+    setLoading(true);
     const response = await uploadImage(file);
-    const { data: ImageResponse } = response;
+    setLoading(false);
 
-    setSubCategoryData((prev) => {
-      return {
-        ...prev,
-        image: ImageResponse.data.url
-      };
-    });
+    setSubCategoryData((prev) => ({ ...prev, image: response.data.url }));
   };
 
   const handleRemoveCategorySelected = (categoryId) => {
-    const index = subCategoryData.category.findIndex(
-      (el) => el._id === categoryId
-    );
-    subCategoryData.category.splice(index, 1);
-    setSubCategoryData((prev) => {
-      return {
-        ...prev
-      };
-    });
+    setSubCategoryData((prev) => ({
+      ...prev,
+      category: prev.category.filter((c) => c._id !== categoryId),
+    }));
   };
 
   const handleSubmitSubCategory = async (e) => {
     e.preventDefault();
     try {
-        const response = await Axios({
-            ...SummaryApi.updateSubCategory,
-            data: subCategoryData
-        })
-
-        const { data: responseData} = response
-        if(responseData.success){
-            toast.success(responseData.message)
-            if(close){
-                close()
-            }
-            if(fetchData){
-                fetchData()
-            }
-        }
+      const response = await Axios({
+        ...SummaryApi.updateSubCategory,
+        data: subCategoryData,
+      });
+      if (response.data.success) {
+        toast.success(response.data.message);
+        close && close();
+        fetchData && fetchData();
+      }
     } catch (error) {
-        AxiosToastError(error)
+      AxiosToastError(error);
     }
-  }
+  };
 
   return (
-    <section className="fixed top-0 bottom-0 right-0 left-0 p-4 bg-neutral-800 bg-opacity-60 flex items-center justify-center z-50">
-      <div className="bg-white max-w-4xl w-full p-4 rounded">
-        <div className="flex items-center justify-between">
-          <h1 className="font-semibold">Edit Sub Category</h1>
-          <button onClick={close} className="w-fit block ml-auto ">
-            <IoClose size={25} />
+    <section className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-40">
+      <div className="bg-white w-full max-w-3xl p-6 rounded-lg shadow-lg">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold text-gray-800">
+            Edit Sub Category
+          </h2>
+          <button
+            onClick={close}
+            className="p-1 rounded hover:bg-gray-200 transition"
+          >
+            <IoClose size={24} />
           </button>
         </div>
-        <form className="mx-3 grid gap-2" onSubmit={handleSubmitSubCategory}>
-          <div className="grid gap-1">
-            <label htmlFor="SubCategoryName">Name</label>
+
+        {/* Form */}
+        <form className="flex flex-col gap-4" onSubmit={handleSubmitSubCategory}>
+          {/* Subcategory Name */}
+          <div className="flex flex-col gap-1">
+            <label htmlFor="subCategoryName" className="text-gray-700">
+              Name
+            </label>
             <input
-              className="bg-blue-50 p-2 border border-blue-100 focus-within:border-primary-200 outline-none rounded"
               type="text"
-              id="SubCategoryName"
-              placeholder="Enter category name"
-              value={subCategoryData.name}
+              id="subCategoryName"
               name="name"
+              value={subCategoryData.name}
               onChange={handleOnChange}
+              placeholder="Enter subcategory name"
+              className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
           </div>
-          <div className="gird gap-1 ">
-            <p>Image</p>
-            <div className="flex gap-4 flex-col lg:flex-row items-center">
-              <div className="bg-blue-50 h-36 w-full lg:w-36 flex items-center justify-center rounded">
+
+          {/* Image Upload */}
+          <div className="flex flex-col gap-2">
+            <p className="text-gray-700">Image</p>
+            <div className="flex flex-col lg:flex-row items-center gap-4">
+              <div className="bg-white h-36 w-full lg:w-36 rounded flex items-center justify-center">
                 {subCategoryData.image ? (
                   <img
                     src={subCategoryData.image}
-                    alt="subCategory"
-                    className="w-full h-full object-scale-down"
+                    alt="subcategory"
+                    className="w-full h-full object-scale-down rounded"
                   />
                 ) : (
-                  <p className="text-sm text-neutral-500">No image</p>
+                  <span className="text-gray-400 text-sm">No image</span>
                 )}
               </div>
               <label htmlFor="uploadSubCategoryImage">
                 <div
-                  className={`${
-                    !subCategoryData.name
-                      ? "bg-gray-300"
-                      : "border-primary-200 hover:bg-primary-100"
-                  } px-4 py-2 rounded cursor-pointer border `}
+                  className={`px-4 py-2 rounded border text-center transition cursor-pointer ${
+                    !subCategoryData.name || loading
+                      ? "bg-gray-200 border-gray-300 text-gray-500 cursor-not-allowed"
+                      : "bg-white border-blue-400 text-blue-600 hover:bg-blue-50"
+                  }`}
                 >
-                  Upload Image
+                  {loading ? "Uploading..." : "Upload Image"}
                 </div>
                 <input
                   type="file"
-                  disabled={!subCategoryData.name}
                   id="uploadSubCategoryImage"
                   className="hidden"
                   accept="image/*"
                   onChange={handleUploadSubCategoryImage}
+                  disabled={!subCategoryData.name || loading}
                 />
               </label>
             </div>
           </div>
 
-          <div className="grid gap-1">
-            <label>Select Category</label>
-            <div className="border focus-within:border-primary-200 rounded">
-              {/* display value */}
-              <div className="flex flex-wrap gap-2">
-                {subCategoryData.category.map((cate, index) => {
-                  return (
-                    <p
-                      className="bg-white shadow-md px-1 m-1 flex items-center gap-2 rounded-md"
-                      key={cate._id + "SelectedValue"}
+          {/* Category Selection */}
+          <div className="flex flex-col gap-2">
+            <label className="text-gray-700">Select Category</label>
+            <div className="border rounded p-2 focus-within:ring-2 focus-within:ring-blue-400">
+              {/* Selected categories */}
+              <div className="flex flex-wrap gap-2 mb-2">
+                {subCategoryData.category.map((cate) => (
+                  <div
+                    key={cate._id}
+                    className="bg-gray-100 text-gray-800 px-2 py-1 rounded-md flex items-center gap-1 shadow-sm"
+                  >
+                    {cate.name}
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveCategorySelected(cate._id)}
+                      className="text-gray-500 hover:text-red-500 transition"
                     >
-                      {cate.name}
-                      <div
-                        className="cursor-pointer hover:bg-gray-200 rounded"
-                        onClick={() => handleRemoveCategorySelected(cate._id)}
-                      >
-                        <IoClose size={20} />
-                      </div>
-                    </p>
-                  );
-                })}
+                      <IoClose size={16} />
+                    </button>
+                  </div>
+                ))}
               </div>
 
-              {/* select Category */}
-
+              {/* Dropdown */}
               <select
-                name=""
-                id=""
-                className="w-full p-2 bg-transparent outline-none border"
+                className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-400"
                 onChange={(e) => {
                   const value = e.target.value;
+                  if (!value) return;
                   const categoryDetails = allCategory.find(
-                    (el) => el._id == value
+                    (el) => el._id === value
                   );
-                  setSubCategoryData((prev) => {
-                    return {
-                      ...prev,
-                      category: [...prev.category, categoryDetails],
-                    };
-                  });
+                  if (
+                    subCategoryData.category.some((c) => c._id === value)
+                  ) return;
+                  setSubCategoryData((prev) => ({
+                    ...prev,
+                    category: [...prev.category, categoryDetails],
+                  }));
                 }}
               >
-                <option value="">
-                  Select Category
-                </option>
-                {allCategory.map((category, index) => {
-                  return (
-                    <option
-                      value={category?._id}
-                      key={category?._id + "subcategory"}
-                    >
-                      {category?.name}
-                    </option>
-                  );
-                })}
+                <option value="">Select Category</option>
+                {allCategory.map((category) => (
+                  <option value={category._id} key={category._id}>
+                    {category.name}
+                  </option>
+                ))}
               </select>
             </div>
           </div>
+
+          {/* Submit Button */}
           <button
-            className={`${
-              subCategoryData?.image &&
-              subCategoryData?.name &&
-              subCategoryData?.category[0]
-                ? "bg-primary-200 hover:bg-primary-100"
-                : "bg-gray-300 "
-            } py-2 font-semibold `}
+            type="submit"
+            disabled={
+              !subCategoryData.name ||
+              !subCategoryData.image ||
+              subCategoryData.category.length === 0
+            }
+            className={`py-2 rounded font-medium text-white transition ${
+              subCategoryData.name &&
+              subCategoryData.image &&
+              subCategoryData.category.length
+                ? "bg-blue-600 hover:bg-blue-700"
+                : "bg-gray-400 cursor-not-allowed"
+            }`}
           >
             Submit
           </button>
