@@ -58,12 +58,8 @@ export const getProductController = async (req, res) => {
   try {
     let {page, limit, search} = req.body
 
-    if(!page){
-      page = 2
-    }
-    if(!limit){
-      limit = 10
-    }
+    page = parseInt(page) || 1;
+    limit = parseInt(limit) || 12;
 
     const query = search ? {
       $text : {

@@ -31,6 +31,7 @@ const ProductAdmin = () => {
 
       if (responseData.success) {
         setProductData(responseData.data);
+        setTotalPageCount(responseData.totalNoPage);
       }
     } catch (error) {
       AxiosToastError(error);
