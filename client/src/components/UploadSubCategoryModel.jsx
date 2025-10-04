@@ -6,6 +6,7 @@ import Axios from "../utils/Axios";
 import SummaryApi from "../common/SummaryApi";
 import toast from "react-hot-toast"
 import AxiosToastError from "../utils/AxiosToastError"
+import Loading from "./Loading";
 
 const UploadSubCategoryModel = ({ close, fetchData}) => {
   const [subCategoryData, setSubCategoryData] = useState({
@@ -13,6 +14,7 @@ const UploadSubCategoryModel = ({ close, fetchData}) => {
     image: "",
     category: [],
   });
+  const [loading, setLoading] = useState(false)
 
   const allCategory = useSelector((state) => state.product.allCategory);
 
@@ -28,6 +30,7 @@ const UploadSubCategoryModel = ({ close, fetchData}) => {
   };
 
   const handleUploadSubCategoryImage = async (e) => {
+    
   const files = Array.from(e.target.files);
   if (!files.length) return;
 
@@ -37,6 +40,7 @@ const UploadSubCategoryModel = ({ close, fetchData}) => {
   });
 
   try {
+    setLoading(true)
     const response = await uploadImage(formData);
     const { data: ImageResponse } = response;
 
@@ -50,6 +54,8 @@ const UploadSubCategoryModel = ({ close, fetchData}) => {
     }
   } catch (error) {
     console.error("Image upload error:", error);
+  }finally{
+    setLoading(false)
   }
 };
 
@@ -127,7 +133,10 @@ const UploadSubCategoryModel = ({ close, fetchData}) => {
                 <div
                   className='border-primary-200 hover:bg-primary-100 px-4 py-2 rounded cursor-pointer border'
                 >
-                  Upload Image
+                  {
+                    loading ? <Loading /> : "Upload Image"
+                  }
+                  
                 </div>
                 <input
                   type="file"
