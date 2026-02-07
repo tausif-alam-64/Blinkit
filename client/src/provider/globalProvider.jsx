@@ -1,12 +1,10 @@
-import { createContext, use, useContext } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import SummaryApi from "../common/SummaryApi";
 import Axios from "../utils/Axios";
 import { useDispatch } from "react-redux";
 import { handleAddItemCart } from "../store/cartProduct";
-import { useEffect } from "react";
 import AxiosToastError from "../utils/AxiosToastError";
 import toast from "react-hot-toast";
-import { useState } from "react";
 import { useSelector } from "react-redux";
 import {DiscountPrice} from "../utils/DiscountPrice.js"
 import { handleAddAddress } from "../store/addressSlice.js";
@@ -25,8 +23,15 @@ const GlobalProvider = ({ children }) => {
   const cartItem = useSelector((state) => state?.cartItem.cart);
   const user = useSelector((state) => state?.user)
 
+  const hasAuth = () => {
+    const token = localStorage.getItem("accessToken");
+    return Boolean(token && user?._id)
+  }
+
   const fetchCartItems = async () => {
     try {
+      if(!hasAuth()) return;
+
       const response = await Axios({
         ...SummaryApi.getCartItems,
       });
@@ -84,9 +89,12 @@ const GlobalProvider = ({ children }) => {
   const handleLogOut = () => {
     localStorage.clear()
     dispatch(handleAddItemCart([]))
+    dispatch(handleAddAddress([]))
+    dispatch(setOrder([]));
   };
 
   const fetchAddress = async () => {
+    if(!hasAuth()) return;
     try {
       const response = await Axios({
         ...SummaryApi.getAddress,
@@ -102,6 +110,7 @@ const GlobalProvider = ({ children }) => {
   }
 
   const fetchOrder = async () => {
+    if(!hasAuth()) return;
     try {
       const response = await Axios({
         ...SummaryApi.getOrderItems,
@@ -117,10 +126,15 @@ const GlobalProvider = ({ children }) => {
   }
 
   useEffect(() => {
-    fetchCartItems();
-    handleLogOut()
-    fetchAddress()
-    fetchOrder()
+    if(hasAuth()){
+      fetchCartItems();
+      fetchAddress()
+      fetchOrder()
+    }else{
+      dispatch(handleAddAddress([]));
+      dispatch(handleAddItemCart([]));
+      dispatch(setOrder([]))
+    }
   }, [user]);
 
   useEffect(() => {

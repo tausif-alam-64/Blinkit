@@ -19,8 +19,18 @@ const App = () => {
   const location = useLocation()
 
   const fetchUser = async () => {
-    const userData = await fetchUserDetails();
-    dispatch(setUserDetails(userData.data))
+    const token = localStorage.getItem("accessToken");
+    if(!token) return;
+    try {
+      const userData = await fetchUserDetails();
+      if(userData?.success && userData?.data){
+        dispatch(setUserDetails(userData.data))
+      }
+      
+    } catch (error) {
+      console.error("Failed to fetch user details", error);
+    }
+    
   }
 
    const fetchCategory = async () => {
@@ -31,7 +41,6 @@ const App = () => {
         });
   
         const { data: responseData } = response;
-  
         if (responseData.success) {
           dispatch(setAllCategory(responseData.data))
         }

@@ -13,8 +13,7 @@ const CategoryWiseProductDisplay = ({ id, name }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const containerRef = useRef();
-   const subCategoryData = useSelector((state) => state.product.allSubCategory);
-
+  const subCategoryData = useSelector((state) => state.product.allSubCategory);
 
   const fetchCategoryWiseProduct = async () => {
     try {
@@ -43,23 +42,25 @@ const CategoryWiseProductDisplay = ({ id, name }) => {
   }, []);
 
   const handleScrollRight = () => {
-    containerRef.current.scrollLeft += 200;
+    containerRef.current.scrollLeft += 400;
   };
   const handleScrollLeft = () => {
-    containerRef.current.scrollLeft -= 200;
+    containerRef.current.scrollLeft -= 400;
   };
 
   const loadingCardNumber = new Array(7).fill(null);
 
   const handleRedirectProductListPage = (id, name) => {
-      const subCategory = subCategoryData.find((sub) => {
-        return sub.category?.some((c) => String(c._id) === String(id));
-      });
-      const url = `/${validURLConvert(name)}-${id}/${validURLConvert(subCategory?.name)}-${subCategory?._id}`;
-      return url;
-    };
+    const subCategory = subCategoryData.find((sub) => {
+      return sub.category?.some((c) => String(c._id) === String(id));
+    });
+    const url = `/${validURLConvert(name)}-${id}/${validURLConvert(
+      subCategory?.name
+    )}-${subCategory?._id}`;
+    return url;
+  };
 
-    const redirectUrl = handleRedirectProductListPage(id, name)
+  const redirectUrl = handleRedirectProductListPage(id, name);
 
   return (
     <div>
@@ -71,7 +72,7 @@ const CategoryWiseProductDisplay = ({ id, name }) => {
       </div>
       <div className="relative flex items-center ">
         <div
-          className="flex gap-4 md:gap-6 lg:gap-8 container mx-auto px-4 overflow-hidden scroll-smooth"
+          className="flex gap-4 md:gap-6 lg:gap-8 container mx-auto px-4  overflow-x-auto overflow-y-hidden scroll-smooth scrollbar-none"
           ref={containerRef}
         >
           {loading &&

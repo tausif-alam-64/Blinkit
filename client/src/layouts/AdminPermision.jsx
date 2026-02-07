@@ -8,7 +8,7 @@ const AdminPermision = ({children}) => {
   return (
     <>
       {
-        isAdmin(user.role) ? children : <p className='text-red-600 bg-red-100 p-4'>Do not have permision</p>
+        isAdmin(user.role) ? children : <p className='text-black bg-gray-200 p-4'>Do not have permision</p>
       }
     </>
   )
