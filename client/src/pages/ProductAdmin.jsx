@@ -14,6 +14,7 @@ const ProductAdmin = () => {
   const [loading, setLoading] = useState(false);
   const [totalPageCount, setTotalPageCount] = useState(1);
   const [search, setSearch] = useState("");
+  const [debounceSearch, setDebounceSearch] = useState(search)
 
   const fetchProductData = async () => {
     try {
@@ -23,7 +24,7 @@ const ProductAdmin = () => {
         data: {
           page: page,
           limit: 12,
-          search: search
+          search: debounceSearch.trim()
         },
       });
 
@@ -42,7 +43,7 @@ const ProductAdmin = () => {
 
   useEffect(() => {
     fetchProductData();
-  }, [page]);
+  }, [page, debounceSearch]);
 
   const handleNext = () => {
     if (page !== totalPageCount) {
@@ -62,16 +63,11 @@ const ProductAdmin = () => {
   };
 
   useEffect(() => {               // Debouncing
-    let flag = true
-    const interval = setTimeout(() => {
-      if(flag){
-        fetchProductData()
-        flag = false
-      }
-    }, 300)
-    return() => {
-      clearTimeout(interval)
-    }
+    const timer = setTimeout(() => {
+      setDebounceSearch(search)
+    }, 500)
+    
+    return () => clearTimeout(timer);
   }, [search])
 
   return (
@@ -95,7 +91,7 @@ const ProductAdmin = () => {
         <div className="min-h-[55vh]">
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
             {productData.map((p, index) => {
-              return <ProductCardAdmin data={p} fetchProductData={fetchProductData} />;
+              return <ProductCardAdmin data={p} key={p._id} fetchProductData={fetchProductData} />;
             })}
           </div>
         </div>
